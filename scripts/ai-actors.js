@@ -3,12 +3,7 @@ class aiActors {
 
     static TEMPLATES = {
         AIACTORS: `modules/${this.ID}/templates/ai-actors.hbs`,
-        AIGEN: `modules/${this.ID}/templates/ai-gen.hbs`,
         AIHIST: `modules/${this.ID}/templates/ai-msg-hist.hbs`
-    }
-
-    static FLAGS = {
-        MSGHIST: 'messagehist'
     }
 
     /**
@@ -154,36 +149,6 @@ class aiActor {
         // These are dynamic elements that may be used in an actor
         let senses = "", languages = "", ci = "", di = "", dr = "", dv = "", movement = "", actions = "", size, description= "", skills = [], skillStr = "", armor_class;
         armor_class = this.getObjectString(ai_object[0]?.system?.attributes?.ac);
-
-        let str_prof = this.getProficiency(ai_object[0]?.system?.abilities?.str?.proficient);
-        let dex_prof = this.getProficiency(ai_object[0]?.system?.abilities?.dex?.proficient);
-        let con_prof = this.getProficiency(ai_object[0]?.system?.abilities?.con?.proficient);
-        let int_prof = this.getProficiency(ai_object[0]?.system?.abilities?.int?.proficient);
-        let wis_prof = this.getProficiency(ai_object[0]?.system?.abilities?.wis?.proficient);
-        let cha_prof = this.getProficiency(ai_object[0]?.system?.abilities?.cha?.proficient);
-
-        skills.push({"acrobatics": this.getProficiency(ai_object[0]?.system?.skills?.acr?.value, "skill")});
-        skills.push({"animal_handling": this.getProficiency(ai_object[0]?.system?.skills?.ani?.value, "skill")});
-        skills.push({"arcana": this.getProficiency(ai_object[0]?.system?.skills?.arc?.value, "skill")});
-        skills.push({"athletics": this.getProficiency(ai_object[0]?.system?.skills?.ath?.value, "skill")});
-        skills.push({"deception": this.getProficiency(ai_object[0]?.system?.skills?.dec?.value, "skill")});
-        skills.push({"history": this.getProficiency(ai_object[0]?.system?.skills?.his?.value, "skill")});
-        skills.push({"insight": this.getProficiency(ai_object[0]?.system?.skills?.ins?.value, "skill")});
-        skills.push({"investigation": this.getProficiency(ai_object[0]?.system?.skills?.inv?.value, "skill")});
-        skills.push({"intimidation": this.getProficiency(ai_object[0]?.system?.skills?.itm?.value, "skill")});
-        skills.push({"medicine": this.getProficiency(ai_object[0]?.system?.skills?.med?.value, "skill")});
-        skills.push({"nature": this.getProficiency(ai_object[0]?.system?.skills?.nat?.value, "skill")});
-        skills.push({"persuasion": this.getProficiency(ai_object[0]?.system?.skills?.per?.value, "skill")});
-        skills.push({"perception": this.getProficiency(ai_object[0]?.system?.skills?.prc?.value, "skill")});
-        skills.push({"performance": this.getProficiency(ai_object[0]?.system?.skills?.prf?.value, "skill")});
-        skills.push({"religion": this.getProficiency(ai_object[0]?.system?.skills?.rel?.value, "skill")});
-        skills.push({"sleight_of_hand": this.getProficiency(ai_object[0]?.system?.skills?.slt?.value, "skill")});
-        skills.push({"stealth": this.getProficiency(ai_object[0]?.system?.skills?.ste?.value, "skill")});
-        skills.push({"survival": this.getProficiency(ai_object[0]?.system?.skills?.sur?.value, "skill")});
-
-        skills.forEach(attribute => {
-            skillStr += this.getObjectString(attribute);
-        })
 
         // These values could be undefined
         if(!!ai_object[0]?.system?.attributes?.senses)
@@ -822,93 +787,23 @@ class aiActor {
 }
 
 class messageHistory {
-    static async allMessages() {
-        let path = "./message_history.json";
-        try {
-            let response = await fetch(path);
-            let allMessages = await response.json();
-            return allMessages;
-        } catch(err) {
-            console.log(err);
-        }
+    static allMessages() {
+        let messages = game.messages.filter(x=>x.flags?.aiMessage);
+        return messages;
     }
 
-    static async addMessage(data) {
-        const MAX_LENGTH = game.settings.get(`${aiActorSettings.ID}`, `${aiActorSettings.SETTINGS.MESSAGE_HIST}`);
-        let filePath = "./message_history.json";
-        let allMessages = [];
-        try {
-            let response = await fetch(filePath);
-            allMessages = await response.json();
-        } catch(err) {
-            console.log(err);
-        }
-
-        // TODO: Make this dynamic set in settings?
-        if(allMessages.length >= MAX_LENGTH) {
-            allMessages.shift();
-        }
-        allMessages.push(data);
-        let file = new File([JSON.stringify(allMessages)], "message_history.json", {type: "application/json"});
-        let path = "./";
-        let uploadResult = await FilePicker.upload("data", path, file, {}, {notify: true});
-        return uploadResult;
+    static allPrompts() {
+        let messages = this.allMessages();
+        let prompts = messages.filter(x=>x.flags.aiMessage == 'prompt').map(x => x.content.replace("!gpt ", "")); 
+        return prompts;
     }
 
-    static deleteMessage(messageId) {
-        const message = this.allMessages[messageId];
-
-        // Foundry specific syntax required to delete a key from a persisted object in the database
-        const keyDeletion = {
-        [`-=${messageId}`]: null
-        }
-
-        // update the database with the updated ToDo list
-        return game.users.get(message.userId)?.setFlag(aiActors.ID, aiActors.FLAGS.MSGHIST, keyDeletion);
-    }
-
-    static deleteAllMessages() {
-        const messages = this.allMessages;
-
-        for(let key in messages) {
-            const keyDeletion = {
-                [`-=${key}`]: null
-            }
-            game.users.get(messages.userId)?.setFlag(aiActors.ID, aiActors.FLAGS.MSGHIST, keyDeletion);
-        }
-
-        return;
-
-        // return game.users.get(messages.userId)?.setFlag(aiActors.ID, aiActors.FLAGS.MSGHIST, keyDeletion);
+    static allResponses() {
+        let messages = this.allMessages();
+        let responses = messages.filter(x=>x.flags.aiMessage == 'response').map(x => x.content);
+        return responses;
     }
 }
-
-class chatGPTMessages {
-    constructor() {
-        this.messages = [];
-    }
-
-    addMessage(message) {
-        this.messages.push({
-            ...message
-        });
-    }
-
-    getMessages() {
-        return this.messages;
-    }
-
-    static initialize() {
-        this.gptMessages = new chatGPTMessages();
-    }
-}
-
-/**
- * Register our module's debug flag with developer mode's custom hook
- */
-Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
-    registerPackageDebugFlag(aiActors.ID);
-});
 
 /* FormApplication for ai actors */
 class aiActorConfig extends FormApplication {
@@ -1008,7 +903,6 @@ class aiActorConfig extends FormApplication {
                 // ai_object contains two JSON objects, one with the format for creating an actor, and one for holding information on actions & items
                 aiActor.setLastUpdate(ai_object);
                 aiActor.setNPC(ai_object[0]);
-                aiActor.setBonus(ai_object[1]);
 
                 // Foundry uses showdown to convert markdown to html
                 /* Doing my own HTML conversion right now
@@ -1064,8 +958,6 @@ class aiActorConfig extends FormApplication {
                 }
 
                 ai_object.push(imgGen);
-                // TODO: Save ai_object to JSON file
-                messageHistory.addMessage(ai_object);
                
                 /* Update HTML elements */
                 ai_element.style.display = 'block';
@@ -1096,7 +988,6 @@ class aiActorConfig extends FormApplication {
                 let npcActor = aiActor.npc;
                 let npcBonuses = aiActor.bonus;
                 let imgSrc = aiActor.imgSrc;
-                let description = aiActor.description;
                 
                 let spellList = [];
                 let nameString = (npcActor.name).replace(/\s+/g, '');
@@ -1114,7 +1005,6 @@ class aiActorConfig extends FormApplication {
                 let actor = game.actors.get(newActor.id);
 
                 console.log(newActor);
-                console.log(npcBonuses.bonus);
 
                 /* Get items and spells lists */
                 const actionsList = await aiActor.getItemList(npcBonuses.bonus.actions);
@@ -1351,7 +1241,6 @@ class aiActorMessageHistory extends FormApplication {
                     await actor.createEmbeddedDocuments("Item", [spell]);
                 })
 
-                messageHistory.addMessage(ai_object);
                 break;
             }
 
@@ -1432,10 +1321,6 @@ class aiActorSettings {
 Hooks.once('init', () => {
     aiActors.initialize();
     aiActorSettings.initialize();
-    chatGPTMessages.initialize();
-});
-
-Hooks.on("ready", async () => {
 });
 
 Hooks.on('renderaiActorConfig', (html) => {
@@ -1484,12 +1369,10 @@ Hooks.on('getActorDirectoryEntryContext', (html) => {
 });
 
 // Chat with ChatGPT for campaign help and ideas
-Hooks.on("chatMessage", async (chatLog, messageText, chatData) => {
+Hooks.on("chatMessage", async (_, messageText, chatData) => {
     // Only the GM can use ChatGPT
     let user = game.users.get(chatData.user);
-    console.log("Messages", chatGPTMessages.gptMessages.getMessages());
     
-    // Split the message text by spaces to parse the command and arguments
     const parts = messageText.trim().split(" ");
     const command = parts.shift();
     const argsString = parts.join(" ");
@@ -1502,20 +1385,25 @@ Hooks.on("chatMessage", async (chatLog, messageText, chatData) => {
 
             // Create Message History
             let userMessage = {"role": "user", "content": `${argsString}` };
-            chatGPTMessages.gptMessages.addMessage(userMessage);
-    
+            chatData.flags = chatData.flags || {};
+            chatData.flags.aiMessage = 'prompt';
+
+            let messages = messageHistory.allPrompts().map(x => ({"role" : "user", "content" : x}));
+            let historyLength = game.settings.get(aiActorSettings.ID, aiActorSettings.SETTINGS.MESSAGE_HIST);
+            messages = messages.slice(-historyLength);
+            messages.push(userMessage);
+            messages = messages.reverse()
             // Call ChatGPT
-            const message = await llmLib.callChat(chatGPTMessages.gptMessages.getMessages());
+            const message = await llmLib.callChat(messages);
             console.log("ChatGPT Message:", message);
-            let newAssistantMessage = {"role": "assistant", "content": `${message}`};
-            chatGPTMessages.gptMessages.addMessage(newAssistantMessage);
-            const formattedMessage = message.replace(/\n/g, '<br>');
-            console.log("After sent Messages", chatGPTMessages.gptMessages.getMessages());
-    
+            const formattedMessage = message.replace(/\n/g, '<br>');    
             // Send a response back to chat
-            ChatMessage.create({
+            const responseMessage = await ChatMessage.create({
                 content: formattedMessage,
-                whisper: ChatMessage.getWhisperRecipients("GM")
+                whisper: ChatMessage.getWhisperRecipients("GM"),
+                flags: {
+                    aiMessage: 'response'
+                }
             });
     
             // Return false to prevent the original message from being processed further
