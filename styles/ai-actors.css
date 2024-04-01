@@ -1,3 +1,40 @@
+
+/* ==================== (C) WINDOW BODY ======================= */
+.aiactor .window-content {
+    font-size: var(--font-size-13);
+    overflow-y: hidden;
+    box-shadow: none;
+    background: none;
+    overflow-y: hidden;
+    border: 1px solid;
+    border-image: url(/systems/wfrp4e/ui/frames/parchment-texture.webp) 4 repeat;
+    border-image-slice: 106 fill;
+    border-image-width: 106px;
+    border-image-outset: 63px 25px 11px 7px;
+    padding: 0px 0px 0px 0px;
+    margin: 3px 26px 0px 8px;
+  }
+
+.aiactor .window-content form {
+    margin: 5px;
+    margin-bottom: 5px;
+    display: inline-block;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: normal;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    padding: 0px;
+    border: 1px solid;
+    border-image: url(/systems/wfrp4e/ui/frames/parchment-texture.webp) 4 repeat;
+    border-image-slice: 250 fill;
+    border-image-width: 250px;
+    border-image-outset: 44px 34px 0px 34px;
+    /* background: red; */
+    /* box-shadow: var(--debug-box-shadow-red); */
+  }
+
+
 #ai-gen-form {
     height: 100%;
 }
@@ -10,10 +47,11 @@
 }
 
 #ai-response {
+    color: black;
+    font-family: CaslonAntiquePL !important;
     margin-top: 2em;
     min-height: 400px;
     height: calc(100% - 80px);
-    overflow: scroll;
     flex-direction: column;
     display: flex;
     align-items: center;
@@ -45,10 +83,20 @@
     width: 150px;
 }
 
-input.ai-actors {
-    padding: 1.1em !important;
+textarea.ai-actors {
+    padding: 5px !important;
     grid-column: 1 / 5;
-    height: auto;
+    border: none;
+    box-shadow: none;
+    background: none;
+    height: unset;
+    color: unset;
+    padding-top: 5px;
+    color: black;
+}
+
+input.ai-actors::placeholder{
+    color: #454545;
 }
 
 #make_ai_actor_btn {

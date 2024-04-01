@@ -125,228 +125,49 @@ class aiActor {
     }
 
     static makePretty(ai_object) {
-        if(ai_object[0].name == undefined) {
+        if(ai_object.npc.name == undefined) {
             return this.errorMessage("Error: JSON file not valid. Please try again.");
         }
-        /* Localization Strings */
-        let ac = game.i18n.localize('AI-ACTOR.character_sheet.armor_class');
-        let hp = game.i18n.localize('AI-ACTOR.character_sheet.hit_points');
-        let lang = game.i18n.localize('AI-ACTOR.character_sheet.languages');
-        let cr = game.i18n.localize('AI-ACTOR.character_sheet.cr');
-        let damage_immunities = game.i18n.localize('AI-ACTOR.character_sheet.damage_immunities');
-        let damage_resistances = game.i18n.localize('AI-ACTOR.character_sheet.damage_resistances');
-        let damage_vulnerabilities = game.i18n.localize('AI-ACTOR.character_sheet.damage_vulnerabilities');
-        let condition_immunities = game.i18n.localize('AI-ACTOR.character_sheet.condition_immunities');
-        let items = game.i18n.localize('AI-ACTOR.character_sheet.items');
-        let desc = game.i18n.localize('AI-ACTOR.character_sheet.description');
-        let act = game.i18n.localize('AI-ACTOR.character_sheet.actions');
-        let armor = game.i18n.localize('AI-ACTOR.character_sheet.armor');
-        let spells = game.i18n.localize('AI-ACTOR.character_sheet.spells');
-        let cantrips = game.i18n.localize('AI-ACTOR.character_sheet.cantrips');
-        let level = game.i18n.localize('AI-ACTOR.character_sheet.level');
-        let biography = game.i18n.localize('AI-ACTOR.character_sheet.biography');
-
-        // These are dynamic elements that may be used in an actor
-        let senses = "", languages = "", ci = "", di = "", dr = "", dv = "", movement = "", actions = "", size, description= "", skills = [], skillStr = "", armor_class;
-        armor_class = this.getObjectString(ai_object[0]?.system?.attributes?.ac);
-
-        // These values could be undefined
-        if(!!ai_object[0]?.system?.attributes?.senses)
-        {
-            senses = this.getObjectString(ai_object[0].system.attributes.senses);
-        }
-
-        if(!!ai_object[0]?.system?.traits?.ci?.value)
-        {
-            ci = this.getArrayString(ai_object[0].system.traits.ci.value);
-        }
-
-        if(!!ai_object[0]?.system?.traits?.languages?.value) {
-            languages = this.getArrayString(ai_object[0].system.traits.languages.value);
-        }
-
-        if(!!ai_object[0]?.system?.traits?.di?.value) {
-            di = this.getArrayString(ai_object[0].system.traits.di.value);
-        }
-
-        if(!!ai_object[0]?.system?.traits?.dr?.value) {
-            dr = this.getArrayString(ai_object[0].system.traits.dr.value);
-        }
-        
-        if(!!ai_object[0]?.system?.traits?.dv?.value) {
-            dv = this.getArrayString(ai_object[0].system.traits.dv.value);
-        }
-
-        if(!!ai_object[0]?.system?.attributes?.movement) {
-            movement = this.getObjectString(ai_object[0].system.attributes.movement);
-        }
-        if(!!ai_object[2]) {
-            description = ai_object[2];
-        }
-
-        for(let key in ai_object[0].system?.skills) {
-            skills;
-        }
-
-        /* Items, Actions, Spells, Armor */
-        for(let key in ai_object[1].bonus) {
-            switch(key) {
-                case 'items':
-                    actions += `<p><strong>${ items }</strong></p>`;
-                    if(Array.isArray(ai_object[1].bonus[key])) {
-                        for(let element in ai_object[1].bonus[key]) {
-                            actions += this.getObjectString(ai_object[1].bonus[key][element]) + "<br>";
-                        }
-                    }
-                    else {
-                        actions += this.getObjectString(ai_object[1].bonus[key]) + "<br>";
-                    }
-                    break;
-                
-                case 'actions':
-                    actions += `<p><strong>${ act }</strong></p>`;
-                    if(Array.isArray(ai_object[1].bonus[key])) {
-                        for(let element in ai_object[1].bonus[key]) {
-                            actions += this.getObjectString(ai_object[1].bonus[key][element]) + "<br>";
-                        }
-                    }
-                    else {
-                        actions += this.getObjectString(ai_object[1].bonus[key]) + "<br>";
-                    }
-                    break;
-
-                case 'spells':
-                    actions += `<p><strong>${ spells }</strong></p>`;
-                    for(let spellLevel in ai_object[1].bonus[key]) {
-                        switch(spellLevel) {
-                            case '0':
-                                actions += `<p><strong>${ cantrips }</strong></p>`;
-                                for(let spell in ai_object[1].bonus[key][spellLevel]) {
-                                    actions += ai_object[1].bonus[key][spellLevel][spell] + ", ";
-                                }
-                                break;
-                            default:
-                                actions += `<p><strong>${ level } ${ spellLevel }</strong></p>`;
-                                for(let spell in ai_object[1].bonus[key][spellLevel]) {
-                                    actions += ai_object[1].bonus[key][spellLevel][spell] + ", ";
-                                }
-                                break;
-                        }
-                        actions += "<br>";
-                    }
-                    break;
-
-                case 'armor':
-                    actions += `<p><strong>${ armor }</strong></p>`;
-                    if(Array.isArray(ai_object[1].bonus[key])) {
-                        for(let element in ai_object[1].bonus[key]) {
-                            actions += this.getObjectString(ai_object[1].bonus[key][element]) + "<br>";
-                        }
-                    }
-                    else {
-                        actions += this.getObjectString(ai_object[1].bonus[key]) + "<br>";
-                    }
-                    break;
-                    
-                default:
-                    break;
-            }
-            actions += "<br>";
-        }
-
-        switch(ai_object[0]?.system?.traits?.size) {
-            case 'tiny':
-                size = "Tiny";
-                break;
-            case 'sm':
-                size = 'Small';
-                break;
-            case 'med':
-                size = 'Medium';
-                break;
-            case 'lg':
-                size = 'Large';
-                break;
-            case 'huge':
-                size = 'Huge';
-                break;
-            case 'grg':
-                size = 'Gargantuan';
-                break;
-            default:
-                size = ai_object[0]?.system?.traits?.size;
-                break;
-        }
-
-        /* TODO: Localization */
         let html = ``;
-        html += `<h1>${ ai_object[0].name }</h1>`;
-        html += `<p><i>${ size } ${ ai_object[0]?.system?.details?.type?.value }, ${ ai_object[0]?.system?.details?.alignment }</i> </p>`;
-        html += `<hr>`;
-        html += `<p><strong>${ ac }:</strong> ${ armor_class }</p>`;
-        html += `<p><strong>${ hp }:</strong><br> ${ ai_object[0]?.system?.attributes?.hp?.value } (${ ai_object[0]?.system?.attributes?.hp?.formula })</p>`;
-        html += `<p>${ movement }</p>`;
+        html += `<h1>${ ai_object.npc.name }</h1>`;
         html += `<hr>`;
         html += `
         <div class="ability-block">
-            <div class="ability-block block">
-                <div class="sm-block">STR</div>
-                <div class="">${ai_object[0]?.system?.abilities?.str?.value}</div>
-                <div class="">${str_prof}</div>
-            </div>
-            <div class="ability-block block">
-                <div class="sm-block">DEX</div>
-                <div>${ai_object[0]?.system?.abilities?.dex?.value}</div>
-                <div class="">${dex_prof}</div>
-            </div>
-            <div class="ability-block block">
-                <div class="sm-block">CON</div>
-                <div>${ai_object[0]?.system?.abilities?.con?.value}</div>
-                <div class="">${con_prof}</div>
-            </div>
-            <div class="ability-block block">
-                <div class="sm-block">INT</div>
-                <div>${ai_object[0]?.system?.abilities?.int?.value}</div>
-                <div class="">${int_prof}</div>
-            </div>
-            <div class="ability-block block">
-                <div class="sm-block">WIS</div>
-                <div>${ai_object[0]?.system?.abilities?.wis?.value}</div>
-                <div class="">${wis_prof}</div>
-            </div>
-            <div class="ability-block block">
-                <div class="sm-block">CHA</div>
-                <div>${ai_object[0]?.system?.abilities?.cha?.value}</div>
-                <div class="">${cha_prof}</div>
-            </div>
+            <table style="height:34px" border="1">
+                <tbody>
+                    <tr style="height:17px">
+                        <td style="height:17px;width:60px;text-align:center">WW</td>
+                        <td style="height:17px;width:60px;text-align:center">US</td>
+                        <td style="height:17px;width:60px;text-align:center">S</td>
+                        <td style="height:17px;width:61px;text-align:center">Wt</td>
+                        <td style="height:17px;width:61px;text-align:center">I</td>
+                        <td style="height:17px;width:61px;text-align:center">Zw</td>
+                        <td style="height:17px;width:61px;text-align:center">Zr</td>
+                        <td style="height:17px;width:61px;text-align:center">Int</td>
+                        <td style="height:17px;width:61px;text-align:center">SW</td>
+                        <td style="height:17px;width:61px;text-align:center">Ogd</td>
+                    </tr>
+                        <tr style="height:17px">                        
+                        <td style="height:17px;width:60px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.ws.value) + Math.floor(Math.random() * 20)}</td>
+                        <td style="height:17px;width:60px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.bs.value) + Math.floor(Math.random() * 20)}</td>
+                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.s.value) + Math.floor(Math.random() * 20)}</td>
+                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.t.value) + Math.floor(Math.random() * 20)}</td>
+                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.i.value) + Math.floor(Math.random() * 20)}</td>
+                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.ag.value) + Math.floor(Math.random() * 20)}</td>
+                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.dex.value) + Math.floor(Math.random() * 20)}</td>
+                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.int.value) + Math.floor(Math.random() * 20)}</td>
+                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.wp.value) + Math.floor(Math.random() * 20)}</td>
+                        <td style="height:17px;width:60px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.fel.value) + Math.floor(Math.random() * 20)}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <hr>
         `;
-        html += `${ skillStr }`;
-        html += `<p>${ senses }</p>`;
-        html += `<p><strong>${ lang }:</strong> ${ languages }\n</p>`;
-        html += `<p><strong>${ cr }:</strong> ${ ai_object[0]?.system?.details?.cr }\n</p>`;
-        if(di) {
-            html += `<p><strong>${ damage_immunities }:</strong> ${ di }</p>`;
-        }
-        if(dr) {
-            html += `<p><strong>${ damage_resistances }:</strong> ${ dr }</p>`;
-        }
-        if(dv) {
-            html += `<p><strong>${ damage_vulnerabilities }:</strong> ${ dv }</p>`;
-        }
-        if(ci) {
-            html += `<p><strong>${ condition_immunities }:</strong> ${ ci }</p>`;
-        }
-        html += `
-        <h2 class="actions">Actions</h2>
-        <i>Due to the nature of AI, these may not be exactly the items created since they may or may not exist.</i>
-        `;
-        html += `<p>${ actions }</p>`;
-        html += `<p><strong>${ biography }:</strong> ${ai_object[0]?.system?.details?.biography?.value}\n<br></p>`;
-        html += `
-        <p><strong>${ desc }:</strong></p>
-        ${description}`;
+        //html += `${ skillStr }`;
+        //html += `<p>${ senses }</p>`;
+        html += `<p><strong>Biografia:</strong> ${ai_object.npc.system.details?.biography?.value}\n<br></p>`;
+        html += `<p><strong>Opis:</strong> ${ai_object.npc.system.details?.description?.value} </p>`;
         return html;
     }
 
@@ -819,6 +640,7 @@ class aiActorConfig extends FormApplication {
             title: title,
             userId: game.userId,
             resizable: true,
+            classes: defaults.classes.concat(["aiactor"])
             //closeOnSubmit: false, // do not close when submitted
             //submitOnChange: true, // submit when any input changes
         };
@@ -902,7 +724,7 @@ class aiActorConfig extends FormApplication {
                 
                 // ai_object contains two JSON objects, one with the format for creating an actor, and one for holding information on actions & items
                 aiActor.setLastUpdate(ai_object);
-                aiActor.setNPC(ai_object[0]);
+                aiActor.setNPC(ai_object.npc);
 
                 // Foundry uses showdown to convert markdown to html
                 /* Doing my own HTML conversion right now
@@ -911,20 +733,15 @@ class aiActorConfig extends FormApplication {
                 */
 
                 /* Get and Set the description to create an image */
-                if(!!ai_object[3]) {
-                    aiActor.setDescription(ai_object[3]);
-                    imgDesc = ai_object[3];
-                    textarea.value = ai_object[3];
-                }
-                else if(!!ai_object[2]) {
-                    aiActor.setDescription(ai_object[2]);
-                    imgDesc = ai_object[2];
-                    textarea.value = ai_object[2];
+                if(!!ai_object.dalle) {
+                    aiActor.setDescription(ai_object.dalle);
+                    imgDesc = ai_object.dalle
+                    textarea.value = ai_object.dalle;
                 }
                 else {
-                    aiActor.setDescription(ai_object[0]?.system?.details?.biography?.value);
-                    imgDesc = ai_object[0]?.system?.details?.biography?.value;
-                    textarea.value = ai_object[0]?.system?.details?.biography?.value;
+                    aiActor.setDescription(ai_object.npc.system.details?.description?.value);
+                    imgDesc = a_iobject.npc.system.details?.description?.value;
+                    textarea.value = a_iobject.npc.system.details?.description?.value;
                 }
 
                 aiActor.setDescription(imgDesc);
@@ -957,7 +774,7 @@ class aiActorConfig extends FormApplication {
                     }
                 }
 
-                ai_object.push(imgGen);
+                ai_object.image = imgGen;
                
                 /* Update HTML elements */
                 ai_element.style.display = 'block';
@@ -1095,37 +912,8 @@ class aiActorMessageHistory extends FormApplication {
     }
 
     async getData(options) {
-        let myMessages = await messageHistory.allMessages();
-        console.log("My Messages:", myMessages);
-        Handlebars.registerHelper("printObject", function(message) {
-            let html = aiActor.makePretty(message);
-            return new Handlebars.SafeString(html);
-        });
-        Handlebars.registerHelper("printImg", function(img) {
-            let name = img[0].name;
-            name = name.replace(" ", "");
-            if(!!img[4]) {
-                let html = `<img id="${name}-img" class="ai-img-gen" src="data:image/png;base64,${img[4]}">`;
-                return new Handlebars.SafeString(html);
-            }
-            else {
-                let html = `<img id="${name}-img" class="ai-img-gen" src="icons/svg/mystery-man.svg">`;
-                return new Handlebars.SafeString(html);
-            }
-        })
-        Handlebars.registerHelper("printTextarea", function(message) {
-            let name = (message[0].name).replace(" ", "");
-            let html = `<textarea id="${name}-txt" class="textarea" style="display: none">${message[3]}</textarea>`;
-            return new Handlebars.SafeString(html);
-        })
-        Handlebars.registerHelper("printLoader", function(message) {
-            let name = (message[0].name).replace(" ", "");
-            let html = `<div id="${name}-ai-img-loading"></div>`;
-            return new Handlebars.SafeString(html);
-        })
-        return {
-            messages: myMessages
-        };
+        let myMessages = messageHistory.allMessages();
+        return { messages: myMessages };
     }
 
     activateListeners(html) {
@@ -1314,6 +1102,36 @@ class aiActorSettings {
         hint: `AI-ACTOR.settings.${this.SETTINGS.MESSAGE_HIST_IMG}.Hint`,
         restricted: true
       });
+
+        Handlebars.registerHelper("printObject", function(message) {
+            let html = aiActor.makePretty(message);
+            return new Handlebars.SafeString(html);
+        });
+    
+        Handlebars.registerHelper("printImg", function(img) {
+            let name = img[0].name;
+            name = name.replace(" ", "");
+            if(!!img[4]) {
+                let html = `<img id="${name}-img" class="ai-img-gen" src="data:image/png;base64,${img[4]}">`;
+                return new Handlebars.SafeString(html);
+            }
+            else {
+                let html = `<img id="${name}-img" class="ai-img-gen" src="icons/svg/mystery-man.svg">`;
+                return new Handlebars.SafeString(html);
+            }
+        });
+
+        Handlebars.registerHelper("printTextarea", function(message) {
+            let name = (message[0].name).replace(" ", "");
+            let html = `<textarea id="${name}-txt" class="textarea" style="display: none">${message[3]}</textarea>`;
+            return new Handlebars.SafeString(html);
+        });
+    
+        Handlebars.registerHelper("printLoader", function(message) {
+            let name = (message[0].name).replace(" ", "");
+            let html = `<div id="${name}-ai-img-loading"></div>`;
+            return new Handlebars.SafeString(html);
+        });
     }
   }
 

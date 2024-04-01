@@ -1,4 +1,4 @@
-<form id="ai-gen-form">
+<form class="aiactor" id="ai-gen-form">
     <div id="ai-gen-window">
         <div id="ai-response">
             <div id="ai-img" style="display: none">
@@ -15,7 +15,7 @@
         </div>
         
         <div id="user-inputs">
-            <input type="text" id="user-input" class="ai-actors" name="user-input" placeholder="{{localize "AI-ACTOR.type_a_description" }}">
+            <textarea id="user-input" class="ai-actors" name="user-input" placeholder="{{localize "AI-ACTOR.type_a_description" }}"></textarea>
 
             <button type="button" class="ai-actors" id="send_message_btn" title="{{localize "AI-ACTOR.generate_actor"}}" data-action="send_message"><i class="fa-solid fa-up-long"></i>{{localize "AI-ACTOR.generate"}}</button>
             <select name="folders" id="folders" class="selector"></select>
