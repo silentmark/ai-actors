@@ -1,21 +1,19 @@
 <form class="aiactor" id="ai-gen-form">
     <div id="ai-gen-window">
         <div id="ai-response">
-            <div id="ai-img" style="display: none">
+            <div id="ai-img">
                 <img id="ai-img-gen" src="icons/svg/mystery-man.svg">
-                <div id="ai-img-loading"></div>
-                <div class="flex">
+                <div id="ai-img-buttons">
                     <button type="button" id="editDescription" data-action="edit_description">{{localize "AI-ACTOR.edit_description"}}</button>
                     <button type="button" id="regenerate_img" data-action="regenerate_img">{{localize "AI-ACTOR.regenerate_image"}}</button>
                 </div>
-                <textarea id="ai-textarea" class="textarea" style="display: none"></textarea>
             </div>
             <div id="ai-inner-response"></div>
-            <div id="ai-loading"></div>
         </div>
-        
+        <div id="ai-loader-wrapper"><div style="display: none" id="ai-loader"></div></div>
         <div id="user-inputs">
-            <textarea id="user-input" class="ai-actors" name="user-input" placeholder="{{localize "AI-ACTOR.type_a_description" }}"></textarea>
+            <textarea id="image-textarea" class="textarea-ai-actors" style="display: none"></textarea>
+            <textarea id="user-input" class="textarea-ai-actors" name="user-input" placeholder="{{localize "AI-ACTOR.type_a_description" }}"></textarea>
 
             <button type="button" class="ai-actors" id="send_message_btn" title="{{localize "AI-ACTOR.generate_actor"}}" data-action="send_message"><i class="fa-solid fa-up-long"></i>{{localize "AI-ACTOR.generate"}}</button>
             <select name="folders" id="folders" class="selector"></select>

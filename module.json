@@ -14,7 +14,11 @@
       "maximum": "11"
   },
   "scripts": [
-      "scripts/ai-actors.js"
+      "scripts/main.js",
+      "scripts/ai-actors-settings.js",
+      "scripts/ai-actor.js",
+      "scripts/ai-actors-config.js",
+      "scripts/ai-actors-message-history.js"
   ],
   "languages": [
     {
