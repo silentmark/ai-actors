@@ -39,6 +39,19 @@ class aiActor {
         if(ai_object.npc.name == undefined) {
             return this.errorMessage("Error: JSON file not valid. Please try again.");
         }
+        let multiplayer = 10;
+
+        ai_object.npc.system.characteristics.weaponSkill.value = Number.parseInt(ai_object.npc.system.characteristics.weaponSkill.value) + Math.floor(Math.random() * multiplayer);
+        ai_object.npc.system.characteristics.ballisticSkill.value = Number.parseInt(ai_object.npc.system.characteristics.ballisticSkill.value) + Math.floor(Math.random() * multiplayer);
+        ai_object.npc.system.characteristics.strength.value = Number.parseInt(ai_object.npc.system.characteristics.strength.value) + Math.floor(Math.random() * multiplayer);
+        ai_object.npc.system.characteristics.toughness.value = Number.parseInt(ai_object.npc.system.characteristics.toughness.value) + Math.floor(Math.random() * multiplayer);
+        ai_object.npc.system.characteristics.initiative.value = Number.parseInt(ai_object.npc.system.characteristics.initiative.value) + Math.floor(Math.random() * multiplayer);
+        ai_object.npc.system.characteristics.agility.value = Number.parseInt(ai_object.npc.system.characteristics.agility.value) + Math.floor(Math.random() * multiplayer);
+        ai_object.npc.system.characteristics.dexterity.value = Number.parseInt(ai_object.npc.system.characteristics.dexterity.value) + Math.floor(Math.random() * multiplayer);
+        ai_object.npc.system.characteristics.intelligence.value = Number.parseInt(ai_object.npc.system.characteristics.intelligence.value) + Math.floor(Math.random() * multiplayer);
+        ai_object.npc.system.characteristics.willPower.value = Number.parseInt(ai_object.npc.system.characteristics.willPower.value) + Math.floor(Math.random() * multiplayer);
+        ai_object.npc.system.characteristics.fellowship.value = Number.parseInt(ai_object.npc.system.characteristics.fellowship.value) + Math.floor(Math.random() * multiplayer);
+
         let html = ``;
         html += `<h1>${ ai_object.npc.name }</h1>`;
         html += `<hr>`;
@@ -59,16 +72,16 @@ class aiActor {
                         <td style="height:17px;width:61px;text-align:center">Ogd</td>
                     </tr>
                         <tr style="height:17px">                        
-                        <td style="height:17px;width:60px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.ws.value) + Math.floor(Math.random() * 20)}</td>
-                        <td style="height:17px;width:60px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.bs.value) + Math.floor(Math.random() * 20)}</td>
-                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.s.value) + Math.floor(Math.random() * 20)}</td>
-                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.t.value) + Math.floor(Math.random() * 20)}</td>
-                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.i.value) + Math.floor(Math.random() * 20)}</td>
-                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.ag.value) + Math.floor(Math.random() * 20)}</td>
-                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.dex.value) + Math.floor(Math.random() * 20)}</td>
-                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.int.value) + Math.floor(Math.random() * 20)}</td>
-                        <td style="height:17px;width:61px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.wp.value) + Math.floor(Math.random() * 20)}</td>
-                        <td style="height:17px;width:60px;text-align:center">${Number.parseInt(ai_object.npc.system.characteristics.fel.value) + Math.floor(Math.random() * 20)}</td>
+                        <td style="height:17px;width:60px;text-align:center">${ai_object.npc.system.characteristics.weaponSkill.value}</td>
+                        <td style="height:17px;width:60px;text-align:center">${ai_object.npc.system.characteristics.ballisticSkill.value}</td>
+                        <td style="height:17px;width:61px;text-align:center">${ai_object.npc.system.characteristics.strength.value}</td>
+                        <td style="height:17px;width:61px;text-align:center">${ai_object.npc.system.characteristics.toughness.value}</td>
+                        <td style="height:17px;width:61px;text-align:center">${ai_object.npc.system.characteristics.initiative.value}</td>
+                        <td style="height:17px;width:61px;text-align:center">${ai_object.npc.system.characteristics.agility.value}</td>
+                        <td style="height:17px;width:61px;text-align:center">${ai_object.npc.system.characteristics.dexterity.value}</td>
+                        <td style="height:17px;width:61px;text-align:center">${ai_object.npc.system.characteristics.intelligence.value}</td>
+                        <td style="height:17px;width:61px;text-align:center">${ai_object.npc.system.characteristics.willPower.value}</td>
+                        <td style="height:17px;width:60px;text-align:center">${ai_object.npc.system.characteristics.fellowship.value}</td>
                     </tr>
                 </tbody>
             </table>
@@ -82,6 +95,11 @@ class aiActor {
         html += `<p><strong>Opis:</strong> ${ai_object.npc.system.details?.description?.value} </p>`;
         html += `<p><strong>Profesje:</strong><ul>`;
         for (let i of ai_object.npc.careers) {
+            html += `<li><a class="content-link" draggable="true" data-id="null" data-uuid="${i.uuid}" data-tooltip=""><i class="fas fa-unlink"></i>${i.name}</a></li>`;
+        }
+        html += `</ul></p>`;
+        html += `<p><strong>Talenty:</strong><ul>`;
+        for (let i of ai_object.npc.talents) {
             html += `<li><a class="content-link" draggable="true" data-id="null" data-uuid="${i.uuid}" data-tooltip=""><i class="fas fa-unlink"></i>${i.name}</a></li>`;
         }
         html += `</ul></p>`;

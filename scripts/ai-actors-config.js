@@ -171,12 +171,9 @@ class aiActorConfig extends FormApplication {
                 let folder = game.folders.get(userSetFolder);
                 /* Grab the actor variables */
                 let npcActor = aiActor.npc;
-                let npcBonuses = aiActor.bonus;
                 let imgSrc = aiActor.imgSrc;
                 
-                let spellList = [];
                 let nameString = (npcActor.name).replace(/\s+/g, '');
-
                 npcActor.folder = folder;
 
                 /* Save the image if it exists */
@@ -186,28 +183,37 @@ class aiActorConfig extends FormApplication {
                 }
 
                 /* Create an actor */
+
+                let char = npcActor.system.characteristics;
+                char.ws = {initial: char.weaponSkill.value};
+                char.bs = {initial: char.ballisticSkill.value};
+                char.s = {initial: char.strength.value};
+                char.t = {initial: char.toughness.value};
+                char.i = {initial: char.initiative.value};
+                char.ag = {initial: char.agility.value};
+                char.dex = {initial: char.dexterity.value};
+                char.int = {initial: char.intelligence.value};
+                char.wp = {initial: char.willPower.value};
+                char.fel = {initial: char.fellowship.value};
+
+                npcActor.system.details.gmnotes = {value: "<p>" + npcActor.system.details.biography.value + "</p>"};
+                npcActor.system.details.biography.value = "<p>" + npcActor.system.details.description.value + "</p>";
+
                 let newActor = await Actor.create(npcActor);
                 let actor = game.actors.get(newActor.id);
 
                 console.log(newActor);
 
-                /* Get items and spells lists */
-                const actionsList = await aiActor.getItemList(npcBonuses.bonus.actions);
-                const armorItemsList = await aiActor.getItemList(npcBonuses.bonus.armor);
-                const itemsList = await aiActor.getItemList(npcBonuses.bonus.items);
-                spellList = await aiActor.getSpellList(npcBonuses.bonus.spells);
-                spellList = aiActor.removeDuplicates(spellList);
+                for (let c of npcActor.careers) {
+                    let career = await fromUuid(c.uuid);
+                    await actor.createEmbeddedDocuments("Item", [career]);
+                }
 
-                /* Create, add, equip item to actor */
-                aiActor.createEquipItems(actionsList, actor);
-                aiActor.createEquipItems(armorItemsList, actor);
-                aiActor.createEquipItems(itemsList, actor);
-
-                /* Spells equip works a little differently */
-                spellList.forEach(async (element) => {
-                    let spell = await fromUuid(element.uuid);
-                    await actor.createEmbeddedDocuments("Item", [spell]);
-                })
+                for (let c of npcActor.talents) {
+                    let career = await fromUuid(c.uuid);
+                    await actor.createEmbeddedDocuments("Item", [career]);
+                }
+                
                 break;
             }
             
@@ -215,7 +221,7 @@ class aiActorConfig extends FormApplication {
 
             case 'regenerate_img': {
                 /* Get HTML elements*/
-                const imgDesc = document.getElementById('ai-textarea').value;
+                const imgDesc = document.getElementById('image-textarea').value;
                 let imgHolder = document.getElementById('ai-img-gen');
                 let loading = document.getElementById('ai-img-loading');
                 let regenImg = document.getElementById('regenerate_img');
@@ -238,7 +244,7 @@ class aiActorConfig extends FormApplication {
             }
 
             case 'edit_description': {
-                let descriptionTextarea = document.getElementById("ai-textarea");
+                let descriptionTextarea = document.getElementById("image-textarea");
 
                 if(descriptionTextarea.style.display === "block") {
                     descriptionTextarea.style.display = "none";
