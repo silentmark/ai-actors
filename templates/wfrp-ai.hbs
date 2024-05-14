@@ -1,0 +1,37 @@
+<form class="wfrp-ai">
+    <div class="wfrp-ai-gen-window">
+        <div class="wfrp-ai-response">
+            <div class="wfrp-ai-img">
+                <img class="wfrp-ai-img-gen" src="icons/svg/mystery-man.svg">
+                {{#if (eq context.stage "final")}}
+                    <textarea class="wfrp-ai-image-description"></textarea>
+                    <div class="wfrp-ai-img-buttons">
+                        <button type="button" data-action="generate">{{localize "AI-ACTOR.GenerateImage"}}</button>
+                    </div>
+                {{/if}}
+            </div>
+            {{#if (ne context.stage "init")}}
+                {{editor npc.html target="npc.html" engine="prosemirror" button=true owner=owner editable=editable}}
+            {{/if}}
+        </div>
+        <div class="wfrp-ai-loader-wrapper">
+            {{#if (ne context.stage "final")}}
+                <div class="wfrp-ai-loader"></div>
+                <div class="wfrp-ai-loader-message">
+                    {{ context.stageDescription }}
+                </div>   
+            {{/if}}
+        </div>
+        <div class="wfrp-ai-inputs">
+            <select name="folder" data-dtype="String" class="selector wfrp-ai-folders">
+                {{#select folder}}
+                  <option value="0">{{localize "AI-ACTOR.select_folder"}}</option>
+                  {{#each folders as |folder|}}
+                    <option value="{{folder.id}}">{{folder.name}}</option>
+                  {{/each}}
+                {{/select}}
+              </select>
+            <button type="button" data-action="save">{{localize "AI-ACTOR.Save"}}</button>
+        </div>
+    </div>
+</form>

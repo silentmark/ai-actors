@@ -1,0 +1,92 @@
+{
+    "AI-ACTOR": {
+      "create_actor": "Generate NPC",
+      "msg_hist": "Message History",
+      "generate_actor": "Generate NPC",
+      "generate": "Generate",
+      "send_message": "Send message",
+      "make_actor": "Save NPC",
+      "type_a_description": "Type a description of a character",
+      "generate_image": "Generate Image",
+      "save_image": "Save Image",
+      "regenerate_image": "Regenerate Image",
+      "generating_image": "Generating Image... this may take a minute",
+      "generating_character": "Generating Character... this may take a minute",
+      "select_folder": "select a folder",
+      "edit_description": "Edit Description",
+      "chatBot": "Chat with Bot",
+      "settings": {
+        "api_key": {
+          "Name": "API Key",
+          "Hint": "Provide an API key to run ChatGPT"
+        },
+        "img_gen": {
+          "Name": "Image Generation",
+          "Hint": "Generate image along with NPC"
+        },
+        "message_history": {
+          "Name": "Max Message History Length",
+          "Hint": "Limits the number of chats stored in history to save space. Older entries are removed first."
+        },
+        "message_hist_img": {
+          "Name": "Save images to message history",
+          "Hint": "Saving images to message history increases the file size by a lot"
+        }
+      },
+      "character_sheet": {
+          "base": "Base Armor Class",
+          "calc": "Calculation",
+          "armor_class": "Armor Class",
+          "hit_points": "Hit Points",
+          "burrow": "Burrow",
+          "climb": "Climb",
+          "fly": "Fly",
+          "swim": "Swim",
+          "walk": "Walk",
+          "darkvision": "Darkvision",
+          "blindsight": "Blindsight",
+          "truesight": "Truesight",
+          "languages": "Languages",
+          "cr": "CR",
+          "damage_immunities": "Damage Immunities",
+          "damage_resistances": "Damage Resistances",
+          "damage_vulnerabilities": "Damage Vulnerabilities",
+          "condition_immunities": "Condition Immunities",
+          "items": "Items",
+          "name": "Name",
+          "type": "Type",
+          "description": "Description",
+          "actions": "Actions",
+          "armor": "Armor",
+          "spells": "Spells",
+          "cantrips": "Cantrips",
+          "level": "Level",
+          "biography": "Biography",
+          "acrobatics": "Acrobatics",
+          "animal_handling": "Animal Handling",
+          "arcana": "Arcana",
+          "athletics": "Athletics",
+          "deception": "Deception",
+          "history": "History",
+          "insight": "Insight",
+          "intimidation": "Intimidation",
+          "investigation": "Investigation",
+          "medicine": "Medicine",
+          "nature": "Nature",
+          "perception": "Perception",
+          "performance": "Performance",
+          "persuasion": "Persuasion",
+          "religion": "Religion",
+          "sleight_of_hand": "Sleight of Hand",
+          "stealth": "Stealth",
+          "survival": "Survival",
+          "value": "",
+          "actionType": "Action Type",
+          "versatile": "Damage",
+          "attunement": "Attunement"
+      },
+      "errors": {
+          "generic": "An error has occurred. Please try again."
+      }
+    }
+  }
