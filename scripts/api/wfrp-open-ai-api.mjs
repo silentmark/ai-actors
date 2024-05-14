@@ -81,6 +81,53 @@ export default class WfrpOpenAiApi {
       npcDescription = JSON.parse(npcDescription).description;
       return { npc: {description: npcDescription}, messages: this.messages, talents: WfrpOpenAiApi.talents, careers: WfrpOpenAiApi.careers };
     }
+
+    async prepareActorData(npc) {
+      let data = {}; 
+      data.name = npc.name;
+      data.type = "npc";
+      data.system = {};
+      data.system.characteristics = {};
+      data.system.characteristics.ws = { initial: npc.characteristics.weaponSkill.value };
+      data.system.characteristics.bs = { initial: npc.characteristics.ballisticSkill.value };
+      data.system.characteristics.s = { initial: npc.characteristics.strength.value };
+      data.system.characteristics.t = { initial: npc.characteristics.toughness.value };
+      data.system.characteristics.i = { initial: npc.characteristics.initiative.value };
+      data.system.characteristics.ag = { initial: npc.characteristics.agility.value };
+      data.system.characteristics.dex = { initial: npc.characteristics.dexterity.value };
+      data.system.characteristics.int = { initial: npc.characteristics.intelligence.value };
+      data.system.characteristics.wp = { initial: npc.characteristics.willPower.value };
+      data.system.characteristics.fel = { initial: npc.characteristics.fellowship.value };
+
+      data.system.details = {};
+      data.system.details.species = { value: npc.details.species.value };
+      data.system.details.gender = { value: npc.details.gender.value };
+      data.system.details.hair = { value: npc.details.hair.value };
+      data.system.details.eyes = { value: npc.details.eyes.value };
+      data.system.details.age = { value: npc.details.age.value };
+      data.system.details.height = { value: npc.details.height.value };
+      data.system.details.weight = { value: npc.details.weight.value };
+      data.system.details.biography = { value: npc.description };
+      
+      return data;
+    }
+
+    async prepareActorItemsData(npc) {
+      let data = [];
+      for (let t of npc.talents) {
+        let talent = await fromUuid(t.uuid);
+        if (talent) {
+          data.push(talent);
+        }
+      }
+      for (let c of npc.careers) {
+        let career = await fromUuid(c.uuid);
+        if (career) {
+          data.push(career);
+        }
+      }
+      return data;
+    }
 }
 
 // Initialize 

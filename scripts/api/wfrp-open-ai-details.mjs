@@ -138,11 +138,11 @@ export default class WfrpOpenAiDetailsApi {
       if (stage.stage === "image") {
         const dalleMessage = `Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii, przygotuj opis po angielsku na potrzeby generowania protretu. Opis powinien zaczynać się od "Photographic, realistic, fantasy genere. A portrait of". Wygenerowany opis zwróć w formacie JSON.
         {
-          "dalle": []
+          "dalle": ""
         }
         `;
         this.messages.push({ "role": "user", "content": dalleMessage });
-        data = {
+        let data = {
           model: "gpt-4o",
           response_format: { type: "json_object" },
           messages: this.messages
@@ -164,7 +164,7 @@ export default class WfrpOpenAiDetailsApi {
         this.messages.push({ "role": "assistant", "content": responseData.choices[0].message.content });
 
         const dalleUrl = 'https://api.openai.com/v1/images/generations';
-        const data = {
+        data = {
             model: "dall-e-3",
             prompt: dalle.dalle,
             n: 1,
@@ -183,6 +183,7 @@ export default class WfrpOpenAiDetailsApi {
 
         const responseDalleData = await responseDalle.json();
         requests.npc.imageBase64 = responseDalleData.data[0].b64_json;
+        requests.npc.imageSrc =  `data:image/png;base64,${responseDalleData.data[0].b64_json}`;
       }
 
       requests.npc.html = this.prettyPrintNpc(requests.npc);

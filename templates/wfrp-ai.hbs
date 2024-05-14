@@ -2,7 +2,11 @@
     <div class="wfrp-ai-gen-window">
         <div class="wfrp-ai-response">
             <div class="wfrp-ai-img">
-                <img class="wfrp-ai-img-gen" src="icons/svg/mystery-man.svg">
+                {{#if npc.imageSrc}}
+                    <img class="wfrp-ai-img-gen" src="{{npc.imageSrc}}">
+                {{else}}
+                    <img class="wfrp-ai-img-gen" src="icons/svg/mystery-man.svg">
+                {{/if}}
                 {{#if (eq context.stage "final")}}
                     <textarea class="wfrp-ai-image-description"></textarea>
                     <div class="wfrp-ai-img-buttons">
@@ -27,7 +31,7 @@
                 {{#select folder}}
                   <option value="0">{{localize "AI-ACTOR.select_folder"}}</option>
                   {{#each folders as |folder|}}
-                    <option value="{{folder.id}}">{{folder.name}}</option>
+                    <option value="{{folder.value}}">{{folder.name}}</option>
                   {{/each}}
                 {{/select}}
               </select>
