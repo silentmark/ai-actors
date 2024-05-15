@@ -8,7 +8,7 @@
                     <img class="wfrp-ai-img-gen" src="icons/svg/mystery-man.svg">
                 {{/if}}
                 {{#if (eq context.stage "final")}}
-                    <textarea class="wfrp-ai-image-description"></textarea>
+                    <textarea name="npc.dalle" class="wfrp-ai-image-description">{{npc.dalle}}</textarea>
                     <div class="wfrp-ai-img-buttons">
                         <button type="button" data-action="generate">{{localize "AActors.General.GenerateImage"}}</button>
                     </div>

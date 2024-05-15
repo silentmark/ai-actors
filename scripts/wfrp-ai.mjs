@@ -96,6 +96,7 @@ export default class WfrpAi extends FormApplication {
             this.api.generateDescription(this.object.input).then(async (response) => {
                 let stages = this.apiDetails.stages;
                 let request = response;
+                request.npc.html = request.npc.description;
                 for (let stage of stages) {
                     await this.refresh(stage, request.npc);
                     request = await this.apiDetails.generateDetails(stage, request);
@@ -124,8 +125,6 @@ export default class WfrpAi extends FormApplication {
     }
 
     async _handleSaveButtonClick(event, data) {
-        //const clickedElement = $(event.currentTarget);
-        //const action = clickedElement.data().action;
         let folderUuid = this.form.folder.value;
         
         let folder = game.folders.get(folderUuid);

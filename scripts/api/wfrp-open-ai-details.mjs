@@ -1,5 +1,6 @@
 import { Constants } from "../wfrp.mjs";
 import WfrpOpenAiApi from "./wfrp-open-ai-api.mjs";
+import WfrpMJApi from "./wfrp-mj-api-image.mjs";
 
 export default class WfrpOpenAiDetailsApi {
   _messages = [];
@@ -27,35 +28,7 @@ export default class WfrpOpenAiDetailsApi {
       };
 
       if (stage.stage === "characteristics") { 
-        const statisticsQuery = `
-        Na podstawie poprzedniego opisu, zwróć w formacie JSON statystyki bohatera niezależnego. Pola characteristics wypełnij wartościami liczbowymi w skali od 1 do 100, gdzie 30 to przeciętna wartość dla człowieka, 60 oznacza duże doświadczenie w danej dziedzinie, a 90 eksperta w danej dziedzinie. Pozostałe pola wypełnij wartościami w języku polskim. 
-      {
-        "npc": {
-          "name": "",
-          "characteristics": {
-              "weaponSkill": { "value": "" },
-              "ballisticSkill": { "value": "" },
-              "strength": { "value": "" },
-              "toughness": { "value": "" },
-              "initiative": { "value": "" },
-              "agility": { "value": "" },
-              "dexterity": { "value": "" },
-              "intelligence": { "value": "" },
-              "willPower": { "value": "" },
-              "fellowship": { "value": "" } 
-          },
-          "details": {
-            "species": { "value": "" },
-            "gender": { "value": "" },
-            "age": { "value": "" },
-            "height": { "value": "" },
-            "weight": { "value": "" },
-            "hair": { "value": "" },
-            "eyes": { "value": "" }
-          }
-        } 
-      }
-        `
+        const statisticsQuery = game.i18n.localize("AActors.Generate.OpenAI.StageCharacteristicsPrompt");
 
         this.messages.push({ "role": "user", "content": statisticsQuery });
 
@@ -73,14 +46,12 @@ export default class WfrpOpenAiDetailsApi {
         requests.npc.characteristics = npc.npc.characteristics;
         requests.npc.details = npc.npc.details;
         requests.npc.name = npc.npc.name;
+
+        this.messages.push({ "role": "assistant", "content": responseData.choices[0].message.content });
       }
 
       if (stage.stage === "careers") {
-        const careersMessage = `Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii, wybierz od jednej do czterech adekwatnych profesji spośród: ${requests.careers.map(career => career.name).join(", ")}. Wybrane nazwy zwróć w formacie JSON. Nie zmieniaj wielkości liter. Nie zmieniaj formy żeńskiej na męską i odwrotnie.
-            {
-              "careers": []
-            }
-            `;
+        const careersMessage = game.i18n.format("AActors.Generate.OpenAI.StageCareersPrompt", { careers: requests.careers.map(career => career.name).join(", ") }) + ` { "careers": [] }`;
         this.messages.push({ "role": "user", "content": careersMessage });
 
         const response = await fetch(url, {
@@ -106,11 +77,7 @@ export default class WfrpOpenAiDetailsApi {
       }
 
       if (stage.stage === "talents") {
-        const talentsMessage = `Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii oraz profesji, wybierz od czterech do ośmiu  adekwatnych talentów spośród: ${requests.talents.map(talent => talent.name).join(", ")}. Wybrane nazwy zwróć w formacie JSON. Nie zmieniaj wielkości liter. Nie zmieniaj wartości ani nazw. Nie odmieniaj nazw talentów.
-          {
-            "talents": []
-          }
-        `;
+        const talentsMessage = game.i18n.format("AActors.Generate.OpenAI.StageTalentsPrompt", { talents: requests.talents.map(talent => talent.name).join(", ") }) + ` { "talents": [] }`;
         this.messages.push({ "role": "user", "content": talentsMessage });
 
         const response = await fetch(url, {
@@ -136,18 +103,14 @@ export default class WfrpOpenAiDetailsApi {
       }
       
       if (stage.stage === "image") {
-        const dalleMessage = `Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii, przygotuj opis po angielsku na potrzeby generowania protretu. Opis powinien zaczynać się od "Photographic, realistic, fantasy genere. A portrait of". Wygenerowany opis zwróć w formacie JSON.
-        {
-          "dalle": ""
-        }
-        `;
+        const dalleMessage =  game.i18n.localize("AActors.Generate.OpenAI.StageImagePrompt");
         this.messages.push({ "role": "user", "content": dalleMessage });
+
         let data = {
           model: "gpt-4o",
           response_format: { type: "json_object" },
           messages: this.messages
-        };
-  
+        };  
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -160,9 +123,17 @@ export default class WfrpOpenAiDetailsApi {
         const responseData = await response.json();
         let dalle = responseData.choices[0].message.content;
         dalle = JSON.parse(dalle);
-        requests.dalle = dalle.dalle;
+        requests.npc.dalle = dalle.dalle;
         this.messages.push({ "role": "assistant", "content": responseData.choices[0].message.content });
 
+        let mjapi = new WfrpMJApi();
+        let responseDalleData = await mjapi.generateImage(dalle.dalle);
+        requests.npc.imageBase64 = responseDalleData.base64
+        requests.npc.imageSrc = 'data:image/png;base64,' + responseDalleData.base64;
+        requests.npc.imageUrl = responseDalleData.url;
+
+
+        /*
         const dalleUrl = 'https://api.openai.com/v1/images/generations';
         data = {
             model: "dall-e-3",
@@ -184,6 +155,7 @@ export default class WfrpOpenAiDetailsApi {
         const responseDalleData = await responseDalle.json();
         requests.npc.imageBase64 = responseDalleData.data[0].b64_json;
         requests.npc.imageSrc =  `data:image/png;base64,${responseDalleData.data[0].b64_json}`;
+        */
       }
 
       requests.npc.html = this.prettyPrintNpc(requests.npc);
