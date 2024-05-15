@@ -1,15 +1,16 @@
 {
-  "id": "ai-actors",
-  "title": "AI Actors",
-  "description": "GM Assistant that creates AI Actors from prompts",
+  "id": "aactors",
+  "title": "AI Generated NPCs",
+  "description": "GM Assistant that creates AI NPCs from prompts",
   "authors": [
     {
-      "name": "Rachel Schutz"
+      "name": "Rachel Schutz",
+      "Name": "Marek Kembrowski"
     }
   ],
-  "version": "1.0.1",
+  "version": "1.0.0",
   "compatibility": {
-      "minimum": "10",
+      "minimum": "11",
       "verified": "11",
       "maximum": "11"
   },
@@ -29,15 +30,6 @@
     }
   ],
   "styles": [
-    "styles/ai-actors.css",
     "styles/wfrp-ai.css"
-  ],
-  "relationships": {
-      "requires": [
-          {
-              "id": "llm-lib",
-              "type": "module"
-          }
-      ]
-  }
+  ]
 }

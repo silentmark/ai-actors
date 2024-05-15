@@ -10,7 +10,7 @@
                 {{#if (eq context.stage "final")}}
                     <textarea class="wfrp-ai-image-description"></textarea>
                     <div class="wfrp-ai-img-buttons">
-                        <button type="button" data-action="generate">{{localize "AI-ACTOR.GenerateImage"}}</button>
+                        <button type="button" data-action="generate">{{localize "AActors.General.GenerateImage"}}</button>
                     </div>
                 {{/if}}
             </div>
@@ -29,13 +29,13 @@
         <div class="wfrp-ai-inputs">
             <select name="folder" data-dtype="String" class="selector wfrp-ai-folders">
                 {{#select folder}}
-                  <option value="0">{{localize "AI-ACTOR.select_folder"}}</option>
+                  <option value="0">{{localize "AActors.General.SelectFolder"}}</option>
                   {{#each folders as |folder|}}
                     <option value="{{folder.value}}">{{folder.name}}</option>
                   {{/each}}
                 {{/select}}
               </select>
-            <button type="button" data-action="save">{{localize "AI-ACTOR.Save"}}</button>
+            <button type="button" data-action="save">{{localize "AActors.General.Save"}}</button>
         </div>
     </div>
 </form>

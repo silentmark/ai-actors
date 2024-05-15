@@ -7,7 +7,7 @@ import { Constants } from "./wfrp.mjs";
 export default class WfrpAi extends FormApplication {
     static get defaultOptions() {
         const defaults = super.defaultOptions;
-        const title = game.i18n.localize('AI-ACTOR.generate_actor');
+        const title = game.i18n.localize('AActors.General.SaveActorForm');
       
         const overrides = {
             // height: 'auto',
@@ -17,7 +17,7 @@ export default class WfrpAi extends FormApplication {
             title: title,
             userId: game.userId,
             resizable: true,
-            classes: defaults.classes.concat(["aiactor"])
+            classes: defaults.classes.concat(["wfrp-ai"])
         };
         const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
         return mergedOptions;

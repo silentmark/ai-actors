@@ -192,23 +192,23 @@ export default class WfrpOpenAiDetailsApi {
 
     prettyPrintNpc(npc) {
       let html = ``;
-      html += `<h1>${ npc.name }</h1>`;
+      html += `<h1>${npc.name}</h1>`;
       html += `<hr>`;
       html += `
       <div class="ability-block">
           <table style="height:34px" border="1">
               <tbody>
                   <tr style="height:17px">
-                      <td style="height:17px;width:60px;text-align:center">WW</td>
-                      <td style="height:17px;width:60px;text-align:center">US</td>
-                      <td style="height:17px;width:60px;text-align:center">S</td>
-                      <td style="height:17px;width:61px;text-align:center">Wt</td>
-                      <td style="height:17px;width:61px;text-align:center">I</td>
-                      <td style="height:17px;width:61px;text-align:center">Zw</td>
-                      <td style="height:17px;width:61px;text-align:center">Zr</td>
-                      <td style="height:17px;width:61px;text-align:center">Int</td>
-                      <td style="height:17px;width:61px;text-align:center">SW</td>
-                      <td style="height:17px;width:61px;text-align:center">Ogd</td>
+                      <td style="height:17px;width:60px;text-align:center">${game.i18n.localize("AActors.WFRP.WS")}</td>
+                      <td style="height:17px;width:60px;text-align:center">${game.i18n.localize("AActors.WFRP.BS")}</td>
+                      <td style="height:17px;width:60px;text-align:center">${game.i18n.localize("AActors.WFRP.S")}</td>
+                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.T")}</td>
+                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.I")}</td>
+                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Ag")}</td>
+                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Dex")}</td>
+                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Int")}</td>
+                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.WP")}</td>
+                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Fel")}</td>
                   </tr>
                       <tr style="height:17px">                        
                       <td style="height:17px;width:60px;text-align:center">${npc.characteristics?.weaponSkill.value}</td>
@@ -228,17 +228,17 @@ export default class WfrpOpenAiDetailsApi {
       <hr>
       `;
 
-      html += `<p><strong>Rasa:</strong> ${npc.details?.species?.value}, <strong>Płeć:</strong> ${npc.details?.gender?.value}</strong>, <strong>Wiek:</strong> ${npc.details.age?.value}</p>`;
-      html += `<p><strong>Wzrost:</strong> ${npc.details?.height?.value}, <strong>Waga:</strong> ${npc.details?.weight?.value} <strong>Oczy:</strong> ${npc.details?.eyes?.value}, <strong>Włosy:</strong> ${npc.details?.hair?.value} </p>`;
-      html += `<p><strong>Opis:</strong> ${npc.description}\n<br></p>`;
-      html += `<p><strong>Profesje:</strong><ul>`;
+      html += `<p><strong>${game.i18n.localize("AActors.WFRP.Species")}:</strong> ${npc.details?.species?.value}, <strong>${game.i18n.localize("AActors.WFRP.Gender")}:</strong> ${npc.details?.gender?.value}</strong>, <strong>${game.i18n.localize("AActors.WFRP.Age")}:</strong> ${npc.details.age?.value}</p>`;
+      html += `<p><strong>${game.i18n.localize("AActors.WFRP.Height")}:</strong> ${npc.details?.height?.value}, <strong>${game.i18n.localize("AActors.WFRP.Weight")}:</strong> ${npc.details?.weight?.value} <strong>${game.i18n.localize("AActors.WFRP.Eyes")}:</strong> ${npc.details?.eyes?.value}, <strong>${game.i18n.localize("AActors.WFRP.Hair")}:</strong> ${npc.details?.hair?.value} </p>`;
+      html += `<p><strong>${game.i18n.localize("AActors.WFRP.Description")}:</strong> ${npc.description}<br></p>`;
+      html += `<p><strong>${game.i18n.localize("AActors.WFRP.Careers")}:</strong><ul>`;
       if (npc.careers) {
         for (let i of npc.careers) {
             html += `<li><a class="content-link" draggable="true" data-id="null" data-uuid="${i.uuid}" data-tooltip=""><i class="fas fa-unlink"></i>${i.name}</a></li>`;
         }
       }
       html += `</ul></p>`;
-      html += `<p><strong>Talenty:</strong><ul>`;
+      html += `<p><strong>${game.i18n.localize("AActors.WFRP.Talents")}:</strong><ul>`;
       if (npc.talents) {
           for (let i of npc.talents) {
           html += `<li><a class="content-link" draggable="true" data-id="null" data-uuid="${i.uuid}" data-tooltip=""><i class="fas fa-unlink"></i>${i.name}</a></li>`;

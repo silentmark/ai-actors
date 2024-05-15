@@ -1,7 +1,7 @@
 import WfrpAiInput from './wfrp-ai-input.mjs';
 
 export class Constants {
-    static ID = 'ai-actors';
+    static ID = 'aactors';
 
     static TEMPLATES = {
         INPUT: `modules/${this.ID}/templates/wfrp-ai-inputs.hbs`,
@@ -22,7 +22,7 @@ Hooks.once('init', () => {
 Hooks.on('getActorDirectoryEntryContext', (html) => { 
     const directoryHeader = html.find(`[class="header-actions action-buttons flexrow"]`);
 
-    const createWfrpAiActor = game.i18n.localize('AI-ACTOR.create_actor');
+    const createWfrpAiActor = game.i18n.localize('AActors.General.Create');
     // const msg_hist = game.i18n.localize('AI-ACTOR.msg_hist');
     if(game.user.isGM) {
         directoryHeader.append(

@@ -1,92 +1,66 @@
 {
-    "AI-ACTOR": {
-      "create_actor": "Generate NPC",
-      "msg_hist": "Message History",
-      "generate_actor": "Generate NPC",
-      "generate": "Generate",
-      "send_message": "Send message",
-      "make_actor": "Save NPC",
-      "type_a_description": "Type a description of a character",
-      "generate_image": "Generate Image",
-      "save_image": "Save Image",
-      "regenerate_image": "Regenerate Image",
-      "generating_image": "Generating Image... this may take a minute",
-      "generating_character": "Generating Character... this may take a minute",
-      "select_folder": "select a folder",
-      "edit_description": "Edit Description",
-      "chatBot": "Chat with Bot",
-      "settings": {
-        "api_key": {
-          "Name": "API Key",
-          "Hint": "Provide an API key to run ChatGPT"
+  "AActors": {
+    "General": {
+      "Create": "Stwórz BNa",
+      "Send": "Wyślij do Skynetu",
+      "DescriptionPlaceholder": "Podaj hasłowy opis BNa",
+      "GenerateImage": "Generuj Portret",
+      "SelectFolder": "Wybierz Folder",
+      "Save": "Zapisz Aktora",
+      "PrepareInputForm": "Przygotuj Dane Wejściowe dla AI",
+      "SaveActorForm": "Stwórz Aktora AI"
+    },
+
+    "Settings": {
+      "OpenAI": {
+        "openAiApiKey": {
+          "Name": "OpenAI API Key",
+          "Hint": "Podaj klucz API OpenAI"
         },
-        "img_gen": {
-          "Name": "Image Generation",
-          "Hint": "Generate image along with NPC"
-        },
-        "message_history": {
-          "Name": "Max Message History Length",
-          "Hint": "Limits the number of chats stored in history to save space. Older entries are removed first."
-        },
-        "message_hist_img": {
-          "Name": "Save images to message history",
-          "Hint": "Saving images to message history increases the file size by a lot"
+        "systemPrompt": {
+          "Name": "System Prompt",
+          "Hint": "Zapewnij kontekst (zapytanie systemowe) dla AI w celu wygenerowania BNa"
         }
-      },
-      "character_sheet": {
-          "base": "Base Armor Class",
-          "calc": "Calculation",
-          "armor_class": "Armor Class",
-          "hit_points": "Hit Points",
-          "burrow": "Burrow",
-          "climb": "Climb",
-          "fly": "Fly",
-          "swim": "Swim",
-          "walk": "Walk",
-          "darkvision": "Darkvision",
-          "blindsight": "Blindsight",
-          "truesight": "Truesight",
-          "languages": "Languages",
-          "cr": "CR",
-          "damage_immunities": "Damage Immunities",
-          "damage_resistances": "Damage Resistances",
-          "damage_vulnerabilities": "Damage Vulnerabilities",
-          "condition_immunities": "Condition Immunities",
-          "items": "Items",
-          "name": "Name",
-          "type": "Type",
-          "description": "Description",
-          "actions": "Actions",
-          "armor": "Armor",
-          "spells": "Spells",
-          "cantrips": "Cantrips",
-          "level": "Level",
-          "biography": "Biography",
-          "acrobatics": "Acrobatics",
-          "animal_handling": "Animal Handling",
-          "arcana": "Arcana",
-          "athletics": "Athletics",
-          "deception": "Deception",
-          "history": "History",
-          "insight": "Insight",
-          "intimidation": "Intimidation",
-          "investigation": "Investigation",
-          "medicine": "Medicine",
-          "nature": "Nature",
-          "perception": "Perception",
-          "performance": "Performance",
-          "persuasion": "Persuasion",
-          "religion": "Religion",
-          "sleight_of_hand": "Sleight of Hand",
-          "stealth": "Stealth",
-          "survival": "Survival",
-          "value": "",
-          "actionType": "Action Type",
-          "versatile": "Damage",
-          "attunement": "Attunement"
-      },
-      "errors": {
-          "generic": "An error has occurred. Please try again."
+    },
+
+    "Generate": {
+      "OpenAI": {
+        "DefaultSystemPrompt": "Jesteś pomocnym i kreatywnym asystentem Mistrza Gry w 4. edycji Warhammer Fantasy RPG. Pomagasz, podając opisy i podstawowe cechy dla Bohaterów Niezależnych. Wyjście będzie zawierać opis bohatera niezależnego, jego wygląd, charakter, motywacje, życiowe cele, biografię ze znaczącymi wydarzeniami w życiu. Korzystaj z opisu świata i historii Warhammer Fantasy, korzystaj z inspiracji innymi dziełami literatury fantasy. Używaj systemu metrycznego. Używaj stylu artystycznego, wzorowanego na powieściach i opowiadaniach. Nie używaj wyliczeń i wypunktowań. Opis zwróc w formacie html, bez css. Odpowiedź zwróć w języku polskim. Odpowiedź zwróć w formacie json. { description: \"\" }",
+        "InitialMessage": "Generowanie opisu BNa...",
+        "StageCharacteristics": "Generowanie cech BNa...",
+        "StageCareers": "Generowanie profesji BNa...",
+        "StageTalents": "Generowanie talentów BNa...",
+        "StageImage": "Generowanie portretu BNa...",
+
+        "StageCharacteristicsPrompt": " Na podstawie poprzedniego opisu, zwróć w formacie JSON statystyki bohatera niezależnego. Pola characteristics wypełnij wartościami liczbowymi w skali od 1 do 100, gdzie 30 to przeciętna wartość dla człowieka, 60 oznacza duże doświadczenie w danej dziedzinie, a 90 eksperta w danej dziedzinie. Pozostałe pola wypełnij wartościami w języku polskim. { \"npc\": { \"name\": \"\", \"characteristics\": { \"weaponSkill\": { \"value\": \"\" }, \"ballisticSkill\": { \"value\": \"\" }, \"strength\": { \"value\": \"\" }, \"toughness\": { \"value\": \"\" }, \"initiative\": { \"value\": \"\" }, \"agility\": { \"value\": \"\" }, \"dexterity\": { \"value\": \"\" }, \"intelligence\": { \"value\": \"\" }, \"willPower\": { \"value\": \"\" }, \"fellowship\": { \"value\": \"\" } }, \"details\": { \"species\": { \"value\": \"\" }, \"gender\": { \"value\": \"\" }, \"age\": { \"value\": \"\" }, \"height\": { \"value\": \"\" }, \"weight\": { \"value\": \"\" }, \"hair\": { \"value\": \"\" }, \"eyes\": { \"value\": \"\" } } } }",
+        "StageCareersPrompt": "Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii, wybierz od jednej do czterech adekwatnych profesji spośród: ${careers}. Wybrane nazwy zwróć w formacie JSON. Nie zmieniaj wielkości liter. Nie zmieniaj formy żeńskiej na męską i odwrotnie.. { \"careers\": [] }",
+        "StageTalentsPrompt": "Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii oraz profesji, wybierz od czterech do ośmiu  adekwatnych talentów spośród: ${talents}. Wybrane nazwy zwróć w formacie JSON. Nie zmieniaj wielkości liter. Nie zmieniaj wartości ani nazw. Nie odmieniaj nazw talentów. { \"talents\": [] }",
+        "StageImagePrompt": "Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii, przygotuj opis po angielsku na potrzeby generowania protretu. Opis powinien zaczynać się od 'Photographic, realistic, fantasy genere. A portrait of'. Wygenerowany opis zwróć w formacie JSON. { \"dalle\": \"\" }"
       }
     }
+  },
+  "WFRP": {
+    "WS": "WW",
+    "BS": "WS",
+    "S": "S",
+    "T": "Wt",
+    "I": "I",
+    "Ag": "Zw",
+    "Dex": "Zr",
+    "Int": "Int",
+    "WP": "SW",
+    "Fel": "Ogd",
+
+    "hair": "Włosy",
+    "Eyes": "Oczy",
+    "Height": "Wzrost",
+    "Weight": "Waga",
+    "Age": "Wiek",
+    "Gender": "Płeć",
+    "Species": "Rasa",
+    "Description": "Opis",
+    "Careers": "Profesje",
+    "Talents": "Talenty"
   }
+}
+}

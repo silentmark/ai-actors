@@ -6,7 +6,7 @@ import WfrpAi from "./wfrp-ai.mjs";
 export default class WfrpAiInput extends FormApplication {
     static get defaultOptions() {
         const defaults = super.defaultOptions;
-        const title = game.i18n.localize('AI-ACTOR.generate_actor');
+        const title = game.i18n.localize('AActors.General.PrepareInputForm');
       
         const overrides = {
             // height: 'auto',

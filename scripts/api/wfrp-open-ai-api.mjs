@@ -4,23 +4,23 @@ export default class WfrpOpenAiApi {
   
   static initialize() {  
       game.settings.register(Constants.ID, WfrpOpenAiApi.apiKey, {
-        name: `CHAT-BOT.settings.${WfrpOpenAiApi.apiKey}.Name`,
+        name: `AActors.Settings.OpenAI.${WfrpOpenAiApi.apiKey}.Name`,
         default: "",
         type: String,
         scope: "world",
         config: true,
         restricted: true,
-        hint: `CHAT-BOT.settings.${WfrpOpenAiApi.apiKey}.Hint`
+        hint: `AActors.Settings.OpenAI.${WfrpOpenAiApi.apiKey}.Hint`
       });
 
       game.settings.register(Constants.ID, WfrpOpenAiApi.systemPrompt, {
-        name: `CHAT-BOT.settings.${WfrpOpenAiApi.systemPrompt}.Name`,
+        name: `AActors.Settings.OpenAI.${WfrpOpenAiApi.systemPrompt}.Name`,
         default: "",
         type: String,
         scope: "world",
         config: true,
         restricted: true,
-        hint: `CHAT-BOT.settings.${WfrpOpenAiApi.systemPrompt}.Hint`,
+        hint: `AActors.Settings.OpenAI.${WfrpOpenAiApi.systemPrompt}.Hint`,
         default: `
           Jesteś pomocnym i kreatywnym asystentem Mistrza Gry w 4. edycji Warhammer Fantasy RPG. Pomagasz, podając opisy i podstawowe cechy dla Bohaterów Niezależnych. Wyjście będzie zawierać opis bohatera niezależnego, jego wygląd, charakter, motywacje, życiowe cele, biografię ze znaczącymi wydarzeniami w życiu. Korzystaj z opisu świata i historii Warhammer Fantasy, korzystaj z inspiracji innymi dziełami literatury fantasy. Używaj systemu metrycznego. Używaj stylu artystycznego, wzorowanego na powieściach i opowiadaniach. Nie używaj wyliczeń i wypunktowań. Opis zwróc w formacie html, bez css. Odpowiedź zwróć w języku polskim. Odpowiedź zwróć w formacie json.
           { 
@@ -37,7 +37,9 @@ export default class WfrpOpenAiApi {
   static talents = null;
 
   messages = [];
-  initialMessage = "Generowanie opisu bohatera niezależnego..."
+  get initialMessage() { 
+    game.i18n.localize("AActors.Generate.OpenAI.InitialMessage");
+  }
   
     async generateDescription(description) {
       if (WfrpOpenAiApi.careers === null) {
@@ -64,8 +66,6 @@ export default class WfrpOpenAiApi {
         top_p: 0.2,
         messages: this.messages
       };
-
-      //return { npc: {description: "jakis tam sobie ziomeczek"}, messages: this.messages, talents: WfrpOpenAiApi.talents, careers: WfrpOpenAiApi.careers };
 
       const response = await fetch(url, {
         method: 'POST',

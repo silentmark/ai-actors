@@ -1,92 +1,66 @@
 {
-    "AI-ACTOR": {
-      "create_actor": "Generate NPC",
-      "msg_hist": "Message History",
-      "generate_actor": "Generate NPC",
-      "generate": "Generate",
-      "send_message": "Send message",
-      "make_actor": "Save NPC",
-      "type_a_description": "Type a description of a character",
-      "generate_image": "Generate Image",
-      "save_image": "Save Image",
-      "regenerate_image": "Regenerate Image",
-      "generating_image": "Generating Image... this may take a minute",
-      "generating_character": "Generating Character... this may take a minute",
-      "select_folder": "select a folder",
-      "edit_description": "Edit Description",
-      "chatBot": "Chat with Bot",
-      "settings": {
-        "api_key": {
-          "Name": "API Key",
-          "Hint": "Provide an API key to run ChatGPT"
-        },
-        "img_gen": {
-          "Name": "Image Generation",
-          "Hint": "Generate image along with NPC"
-        },
-        "message_history": {
-          "Name": "Max Message History Length",
-          "Hint": "Limits the number of chats stored in history to save space. Older entries are removed first."
-        },
-        "message_hist_img": {
-          "Name": "Save images to message history",
-          "Hint": "Saving images to message history increases the file size by a lot"
+    "AActors": {
+      "General": {
+        "Create": "Create NPC",
+        "Send": "Send to AI",
+        "DescriptionPlaceholder": "Type a description of a npc",
+        "GenerateImage": "Generate Image",
+        "SelectFolder": "Select a folder",
+        "Save": "Save Actor",
+        "PrepareInputForm": "Preparing Input for AI",
+        "SaveActorForm": "Save Actor"
+      },
+
+      "Settings": {
+        "OpenAI": {
+          "openAiApiKey": {
+            "Name": "OpenAI API Key",
+            "Hint": "Provide an API key to run OpenAI"
+          },
+          "systemPrompt": {
+            "Name": "System Prompt",
+            "Hint": "Provide a context (System Prompt) for the AI to generate NPC"
+          }
+      },
+
+      "Generate": {
+        "OpenAI": {
+          "DefaultSystemPrompt": "You are a helpful and creative assistant to the Game Master in 4th Edition Warhammer Fantasy RPG. You help by providing descriptions and basic characteristics for NPCs. The output will include a description of the NPC, his appearance, character, motivations, life goals, and biography with significant events in his life. Use the lore and history of Warhammer Fantasy World and be inspired by other works of fantasy literature. Use the metric system. Use an artistic style based on novels and short stories. Do not use calculations and bullet points. Return the description in html format, without css. Return the response in json format. { description: \"\" }",
+          "InitialMessage": "Generating NPC Description...",
+          "StageCharacteristics": "Generating NPC Characteristics...",
+          "StageCareers": "Generating NPC Careers...",
+          "StageTalents": "Generating NPC Talents...",
+          "StageImage": "Generating NPC Image...",
+
+          "StageCharacteristicsPrompt": "Based on the previous description, return the NPC's characteristics in JSON format. Fill in the characteristics fields with numerical values on a scale from 1 to 100, where 30 is an average value for a person, 60 means extensive experience in a given field, and 90 means an expert in a given field. Fill in the remaining fields with values in English. { \"npc\": { \"name\": \"\", \"characteristics\": { \"weaponSkill\": { \"value\": \"\" }, \"ballisticSkill\": { \"value\": \"\" }, \"strength\": { \"value\": \"\" }, \"toughness\": { \"value\": \"\" }, \"initiative\": { \"value\": \"\" }, \"agility\": { \"value\": \"\" }, \"dexterity\": { \"value\": \"\" }, \"intelligence\": { \"value\": \"\" }, \"willPower\": { \"value\": \"\" }, \"fellowship\": { \"value\": \"\" } }, \"details\": { \"species\": { \"value\": \"\" }, \"gender\": { \"value\": \"\" }, \"age\": { \"value\": \"\" }, \"height\": { \"value\": \"\" }, \"weight\": { \"value\": \"\" }, \"hair\": { \"value\": \"\" }, \"eyes\": { \"value\": \"\" } } } }",
+          "StageCareersPrompt": "For the NPC you have just generated, based on the generated description and biography, select from one to four appropriate professions from: ${careers}. Return selected names in JSON format. Do not change the case. Do not change the form. { \"careers\": [] }",
+          "StageTalentsPrompt": "For the NPC you have just generated, based on the generated description, biography and carrers, select four to eight appropriate talents from among: ${talents}. Return selected names in JSON format. Do not change the case. Do not change values or names. Don't change the names of talents. { \"talents\": [] }",
+          "StageImagePrompt": "For the NPC you have just generated, based on the generated description and biography, prepare a description in English for the purpose of generating an Image using Dall-E. The description should start with 'Photographic, realistic, fantasy generated. A portrait of'. Return the generated description in JSON format. { \"dalle\": \"\" }"
         }
-      },
-      "character_sheet": {
-          "base": "Base Armor Class",
-          "calc": "Calculation",
-          "armor_class": "Armor Class",
-          "hit_points": "Hit Points",
-          "burrow": "Burrow",
-          "climb": "Climb",
-          "fly": "Fly",
-          "swim": "Swim",
-          "walk": "Walk",
-          "darkvision": "Darkvision",
-          "blindsight": "Blindsight",
-          "truesight": "Truesight",
-          "languages": "Languages",
-          "cr": "CR",
-          "damage_immunities": "Damage Immunities",
-          "damage_resistances": "Damage Resistances",
-          "damage_vulnerabilities": "Damage Vulnerabilities",
-          "condition_immunities": "Condition Immunities",
-          "items": "Items",
-          "name": "Name",
-          "type": "Type",
-          "description": "Description",
-          "actions": "Actions",
-          "armor": "Armor",
-          "spells": "Spells",
-          "cantrips": "Cantrips",
-          "level": "Level",
-          "biography": "Biography",
-          "acrobatics": "Acrobatics",
-          "animal_handling": "Animal Handling",
-          "arcana": "Arcana",
-          "athletics": "Athletics",
-          "deception": "Deception",
-          "history": "History",
-          "insight": "Insight",
-          "intimidation": "Intimidation",
-          "investigation": "Investigation",
-          "medicine": "Medicine",
-          "nature": "Nature",
-          "perception": "Perception",
-          "performance": "Performance",
-          "persuasion": "Persuasion",
-          "religion": "Religion",
-          "sleight_of_hand": "Sleight of Hand",
-          "stealth": "Stealth",
-          "survival": "Survival",
-          "value": "",
-          "actionType": "Action Type",
-          "versatile": "Damage",
-          "attunement": "Attunement"
-      },
-      "errors": {
-          "generic": "An error has occurred. Please try again."
       }
+    },
+    "WFRP": {
+      "WS": "WS",
+      "BS": "BS",
+      "S": "S",
+      "T": "T",
+      "I": "I",
+      "Ag": "Ag",
+      "Dex": "Dex",
+      "Int": "Int",
+      "WP": "WP",
+      "Fel": "Fel",
+
+      "hair": "Hair",
+      "Eyes": "Eyes",
+      "Height": "Height",
+      "Weight": "Weight",
+      "Age": "Age",
+      "Gender": "Gender",
+      "Species": "Species",
+      "Description": "Description",
+      "Careers": "Careers",
+      "Talents": "Talents"
     }
   }
+}
