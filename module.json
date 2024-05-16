@@ -4,8 +4,12 @@
   "description": "GM Assistant that creates AI NPCs from prompts",
   "authors": [
     {
-      "name": "Rachel Schutz",
-      "Name": "Marek Kembrowski"
+      "name": "Rachel Schutz"
+    },
+    {
+      "name": "silent_mark",
+      "email": "marek@kembrowski.net",
+      "discord": "silent_mark"
     }
   ],
   "version": "1.0.0",
@@ -15,7 +19,7 @@
       "maximum": "11"
   },
   "esmodules": [
-    "/scripts/wfrp.mjs"
+    "/scripts/actor.mjs"
   ],
   "languages": [
     {
@@ -30,6 +34,6 @@
     }
   ],
   "styles": [
-    "styles/wfrp-ai.css"
+    "styles/actor-ai.css"
   ]
 }

@@ -1,23 +1,31 @@
-import { Constants } from "../wfrp.mjs";
-import WfrpOpenAiApi from "./wfrp-open-ai-api.mjs";
-import WfrpMJApi from "./wfrp-mj-api-image.mjs";
+import { Constants } from "../actor.mjs";
+import ActorAiOpenAiApi from "./actor-ai-open-ai-api.mjs"
+import ImageMidJourneyApi from "./image-mj-api.mjs";
 
 export default class WfrpOpenAiDetailsApi {
-  _messages = [];
   
+  static careers = null;
+  static talents = null;
 
   get stages() {
     return [
-      {stage: "characteristics", message: "Generowanie Cech Bohatera Niezależnego..."},
-      {stage: "careers", message: "Generowanie Profesji Bohatera Niezależnego..."},
-      {stage: "talents", message: "Generowanie Talentów Bohatera Niezależnego..."},
-      {stage: "image", message: "Generowanie obrazu Bohatera Niezależnego..."}
+      {stage: "characteristics", message: game.i18n.localize("AActors.WFRP.StageCharacteristics")},
+      {stage: "careers", message: game.i18n.localize("AActors.WFRP.StageCareers")},
+      {stage: "talents", message: game.i18n.localize("AActors.WFRP.StageTalents")}
     ];
   }
   
   async generateDetails(stage, requests) {
+    if (WfrpOpenAiDetailsApi.careers === null) {
+        WfrpOpenAiDetailsApi.careers = await game.wfrp4e.utility.findAll("career");
+      }
+      if (WfrpOpenAiDetailsApi.talents === null) {
+        WfrpOpenAiDetailsApi.talents = await game.wfrp4e.utility.findAll("talent");
+      }
+      requests.talents = WfrpOpenAiDetailsApi.talents;
+      requests.careers = WfrpOpenAiDetailsApi.careers;
 
-      const OPENAI_API_KEY = game.settings.get(Constants.ID, WfrpOpenAiApi.apiKey); // Replace with your actual API key
+      const OPENAI_API_KEY = game.settings.get(Constants.ID, ActorAiOpenAiApi.apiKey); // Replace with your actual API key
       const url = 'https://api.openai.com/v1/chat/completions';
       this.messages = requests.messages;
 
@@ -28,7 +36,7 @@ export default class WfrpOpenAiDetailsApi {
       };
 
       if (stage.stage === "characteristics") { 
-        const statisticsQuery = game.i18n.localize("AActors.Generate.OpenAI.StageCharacteristicsPrompt");
+        const statisticsQuery = game.i18n.localize("AActors.WFRP.StageCharacteristicsPrompt");
 
         this.messages.push({ "role": "user", "content": statisticsQuery });
 
@@ -51,7 +59,7 @@ export default class WfrpOpenAiDetailsApi {
       }
 
       if (stage.stage === "careers") {
-        const careersMessage = game.i18n.format("AActors.Generate.OpenAI.StageCareersPrompt", { careers: requests.careers.map(career => career.name).join(", ") }) + ` { "careers": [] }`;
+        const careersMessage = game.i18n.format("AActors.WFRP.StageCareersPrompt", { careers: requests.careers.map(career => career.name).join(", ") }) + ` { "careers": [] }`;
         this.messages.push({ "role": "user", "content": careersMessage });
 
         const response = await fetch(url, {
@@ -77,7 +85,7 @@ export default class WfrpOpenAiDetailsApi {
       }
 
       if (stage.stage === "talents") {
-        const talentsMessage = game.i18n.format("AActors.Generate.OpenAI.StageTalentsPrompt", { talents: requests.talents.map(talent => talent.name).join(", ") }) + ` { "talents": [] }`;
+        const talentsMessage = game.i18n.format("AActors.WFRP.StageTalentsPrompt", { talents: requests.talents.map(talent => talent.name).join(", ") }) + ` { "talents": [] }`;
         this.messages.push({ "role": "user", "content": talentsMessage });
 
         const response = await fetch(url, {
@@ -100,64 +108,7 @@ export default class WfrpOpenAiDetailsApi {
           requests.npc.talents.push({name: co.name, uuid: co.uuid});
         }
         this.messages.push({ "role": "assistant", "content": responseData.choices[0].message.content });
-      }
-      
-      if (stage.stage === "image") {
-        const dalleMessage =  game.i18n.localize("AActors.Generate.OpenAI.StageImagePrompt");
-        this.messages.push({ "role": "user", "content": dalleMessage });
-
-        let data = {
-          model: "gpt-4o",
-          response_format: { type: "json_object" },
-          messages: this.messages
-        };  
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${OPENAI_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        const responseData = await response.json();
-        let dalle = responseData.choices[0].message.content;
-        dalle = JSON.parse(dalle);
-        requests.npc.dalle = dalle.dalle;
-        this.messages.push({ "role": "assistant", "content": responseData.choices[0].message.content });
-
-        let mjapi = new WfrpMJApi();
-        let responseDalleData = await mjapi.generateImage(dalle.dalle);
-        requests.npc.imageBase64 = responseDalleData.base64
-        requests.npc.imageSrc = 'data:image/png;base64,' + responseDalleData.base64;
-        requests.npc.imageUrl = responseDalleData.url;
-
-
-        /*
-        const dalleUrl = 'https://api.openai.com/v1/images/generations';
-        data = {
-            model: "dall-e-3",
-            prompt: dalle.dalle,
-            n: 1,
-            size: "1024x1024",
-            response_format: "b64_json"
-        };
-
-        const responseDalle = await fetch(dalleUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${OPENAI_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        const responseDalleData = await responseDalle.json();
-        requests.npc.imageBase64 = responseDalleData.data[0].b64_json;
-        requests.npc.imageSrc =  `data:image/png;base64,${responseDalleData.data[0].b64_json}`;
-        */
-      }
-
+    }
       requests.npc.html = this.prettyPrintNpc(requests.npc);
       return requests;
     }
@@ -219,6 +170,53 @@ export default class WfrpOpenAiDetailsApi {
       html += `</ul></p>`;
       return html;
     }
+    
+    async prepareActorData(npc) {
+        let data = {}; 
+        data.name = npc.name;
+        data.type = "npc";
+        data.system = {};
+        data.system.characteristics = {};
+        data.system.characteristics.ws = { initial: npc.characteristics.weaponSkill.value };
+        data.system.characteristics.bs = { initial: npc.characteristics.ballisticSkill.value };
+        data.system.characteristics.s = { initial: npc.characteristics.strength.value };
+        data.system.characteristics.t = { initial: npc.characteristics.toughness.value };
+        data.system.characteristics.i = { initial: npc.characteristics.initiative.value };
+        data.system.characteristics.ag = { initial: npc.characteristics.agility.value };
+        data.system.characteristics.dex = { initial: npc.characteristics.dexterity.value };
+        data.system.characteristics.int = { initial: npc.characteristics.intelligence.value };
+        data.system.characteristics.wp = { initial: npc.characteristics.willPower.value };
+        data.system.characteristics.fel = { initial: npc.characteristics.fellowship.value };
+  
+        data.system.details = {};
+        data.system.details.species = { value: npc.details.species.value };
+        data.system.details.gender = { value: npc.details.gender.value };
+        data.system.details.hair = { value: npc.details.hair.value };
+        data.system.details.eyes = { value: npc.details.eyes.value };
+        data.system.details.age = { value: npc.details.age.value };
+        data.system.details.height = { value: npc.details.height.value };
+        data.system.details.weight = { value: npc.details.weight.value };
+        data.system.details.biography = { value: npc.description };
+        
+        return data;
+      }
+  
+      async prepareActorItemsData(npc) {
+        let data = [];
+        for (let t of npc.talents) {
+          let talent = await fromUuid(t.uuid);
+          if (talent) {
+            data.push(talent);
+          }
+        }
+        for (let c of npc.careers) {
+          let career = await fromUuid(c.uuid);
+          if (career) {
+            data.push(career);
+          }
+        }
+        return data;
+      }
   
     static levenshtein(s, t) {
       if (s === t) {

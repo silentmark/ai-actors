@@ -1,15 +1,15 @@
-import WfrpAiInput from './wfrp-ai-input.mjs';
+import ActorAiInput from './actor-ai-input.mjs';
 
 export class Constants {
     static ID = 'aactors';
 
     static TEMPLATES = {
-        INPUT: `modules/${this.ID}/templates/wfrp-ai-inputs.hbs`,
-        ACTOR: `modules/${this.ID}/templates/wfrp-ai.hbs`
+        INPUT: `modules/${this.ID}/templates/actor-ai-inputs.hbs`,
+        ACTOR: `modules/${this.ID}/templates/actor-ai.hbs`
     }
 
     static initialize() {
-        this.mainInput = new WfrpAiInput();
+        this.mainInput = new ActorAiInput();
     }
 }
 
@@ -22,13 +22,13 @@ Hooks.once('init', () => {
 Hooks.on('getActorDirectoryEntryContext', (html) => { 
     const directoryHeader = html.find(`[class="header-actions action-buttons flexrow"]`);
 
-    const createWfrpAiActor = game.i18n.localize('AActors.General.Create');
+    const createActor = game.i18n.localize('AActors.General.Create');
     if(game.user.isGM) {
         directoryHeader.append(
-            `<button type='button' class='create-wfrp-ai-actor' title='${createWfrpAiActor}'><i class="fa-solid fa-hat-wizard"></i> ${createWfrpAiActor}</button>`
+            `<button type='button' class='create-actor-ai-actor' title='${createActor}'><i class="fa-solid fa-hat-wizard"></i> ${createActor}</button>`
         )
 
-        html.on('click', '.create-wfrp-ai-actor', (event) => {
+        html.on('click', '.create-actor-ai-actor', (event) => {
             Constants.mainInput.render(true, {userId: game.userId});
         });
     }

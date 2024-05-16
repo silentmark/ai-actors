@@ -1,10 +1,10 @@
-.wfrp-ai .window-content form {
+.actor-ai .window-content form {
     border-image: url(/systems/wfrp4e/ui/frames/parchment-texture.webp) 4 repeat;
     border-image-slice: 250 fill;
     border-image-outset: 44px 34px 0px 34px;
 }
 
-.wfrp-ai-img {
+.actor-ai-img {
     min-width: 200px;
     max-width: 200px;
     padding: 5px;
@@ -14,23 +14,23 @@
     flex-flow: column;
 }
 
-.wfrp-ai-img-gen {
+.actor-ai-img-gen {
     padding: 5px;;
 }
 
-.wfrp-ai-img-buttons {
+.actor-ai-img-buttons {
     display: flex;
     padding-top: 5px;
 }
 
-.wfrp-ai-gen-window {
+.actor-ai-gen-window {
     display: flex;
     flex-direction: column;
     justify-items: stretch;
     height: 100%;
 }
 
-.wfrp-ai-response {
+.actor-ai-response {
     color: black;
     font-family: CaslonAntiquePL !important;
     margin-top: 2em;
@@ -39,26 +39,26 @@
     justify-content: center;
 }
 
-.wfrp-ai-inputs {
+.actor-ai-inputs {
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-.wfrp-ai-folders {
+.actor-ai-folders {
     padding: 5px;
     margin: 3px;
     height: auto;
 }
 
-.wfrp-ai-image-description {
+.actor-ai-image-description {
     padding: 5px !important;
     background: none;
     margin: 3px;
     color: black;
 }
 
-.wfrp-ai-textarea {
+.actor-ai-textarea {
     height: calc(100% - 45px);
     padding: 5px !important;
     background: none;
@@ -66,18 +66,18 @@
     color: black;
 }
 
-.wfrp-ai-textarea::placeholder {
+.actor-ai-textarea::placeholder {
     color: rgb(66, 66, 66);
 }
 
-.wfrp-ai-loader-wrapper {
+.actor-ai-loader-wrapper {
     display: flex;
     align-items: center;
     width: 100%;
     flex-flow: column;
 }
 
-.wfrp-ai-loader {
+.actor-ai-loader {
     border: 16px solid #f3f3f3;
     border-radius: 50%;
     border-top: 16px solid rgba(105, 0, 8, 0.8);
@@ -87,7 +87,7 @@
     animation: spin 2s linear infinite;
 }
 
-.wfrp-ai-loader-message {
+.actor-ai-loader-message {
     color: black;
 }
 

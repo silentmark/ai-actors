@@ -21,24 +21,54 @@
           "Name": "System Prompt",
           "Hint": "Provide a context (System Prompt) for the AI to generate NPC"
         }
+      },
+      "MJ": {
+        "authorizationHeader": {
+          "Name": "Discord Authorization Header",
+          "Hint": "Provide an Authorization Header to access the API, for details please check this link: https://medium.com/@useapi.net/interact-with-midjourney-using-discord-api-5a2e150f5e97"
+        },
+        "channelId": {
+          "Name": "Discord Channel Id",
+          "Hint": "Provide a Discord Channel Id"
+        },
+        "appId": {
+          "Name": "Midjourney App Id",
+          "Hint": "Provide an App Id"
+        },
+        "guildId": {
+          "Name": "Discord Guild Id",
+          "Hint": "Provide a Guild Id"
+        },
+        "sessionId": {
+          "Name": "Discord Session Id",
+          "Hint": "Provide a Session Id"
+        },
+        "imagineCommandVersionId": {
+          "Name": "MidJourney Imagine Command Version Id",
+          "Hint": "Provide an Imagine Command Version Id"
+        },
+        "imagineCommandId": {
+          "Name": "MidJourney Imagine Command Id",
+          "Hint": "Provide an Imagine Command Id"
+        }
       }
     },
-    "Generate": {
-      "OpenAI": {
+    "OpenAI": {
         "DefaultSystemPrompt": "You are a helpful and creative assistant to the Game Master in 4th Edition Warhammer Fantasy RPG. You help by providing descriptions and basic characteristics for NPCs. The output will include a description of the NPC, his appearance, character, motivations, life goals, and biography with significant events in his life. Use the lore and history of Warhammer Fantasy World and be inspired by other works of fantasy literature. Use the metric system. Use an artistic style based on novels and short stories. Do not use calculations and bullet points. Return the description in html format, without css. Return the response in json format. { description: \"\" }",
         "InitialMessage": "Generating NPC Description...",
-        "StageCharacteristics": "Generating NPC Characteristics...",
-        "StageCareers": "Generating NPC Careers...",
-        "StageTalents": "Generating NPC Talents...",
         "StageImage": "Generating NPC Image...",
 
-        "StageCharacteristicsPrompt": "Based on the previous description, return the NPC's characteristics in JSON format. Fill in the characteristics fields with numerical values on a scale from 1 to 100, where 30 is an average value for a person, 60 means extensive experience in a given field, and 90 means an expert in a given field. Fill in the remaining fields with values in English. { \"npc\": { \"name\": \"\", \"characteristics\": { \"weaponSkill\": { \"value\": \"\" }, \"ballisticSkill\": { \"value\": \"\" }, \"strength\": { \"value\": \"\" }, \"toughness\": { \"value\": \"\" }, \"initiative\": { \"value\": \"\" }, \"agility\": { \"value\": \"\" }, \"dexterity\": { \"value\": \"\" }, \"intelligence\": { \"value\": \"\" }, \"willPower\": { \"value\": \"\" }, \"fellowship\": { \"value\": \"\" } }, \"details\": { \"species\": { \"value\": \"\" }, \"gender\": { \"value\": \"\" }, \"age\": { \"value\": \"\" }, \"height\": { \"value\": \"\" }, \"weight\": { \"value\": \"\" }, \"hair\": { \"value\": \"\" }, \"eyes\": { \"value\": \"\" } } } }",
-        "StageCareersPrompt": "For the NPC you have just generated, based on the generated description and biography, select from one to four appropriate professions from: ${careers}. Return selected names in JSON format. Do not change the case. Do not change the form.",
-        "StageTalentsPrompt": "For the NPC you have just generated, based on the generated description, biography and carrers, select four to eight appropriate talents from among: ${talents}. Return selected names in JSON format. Do not change the case. Do not change values or names. Don't change the names of talents.",
         "StageImagePrompt": "For the NPC you have just generated, based on the generated description and biography, prepare a description in English for the purpose of generating an Image using Dall-E. The description should start with 'Photographic, realistic, fantasy generated. A portrait of'. Return the generated description in JSON format. { \"dalle\": \"\" }"
-      }
     },
     "WFRP": {
+      "StageCharacteristics": "Generating NPC Characteristics...",
+      "StageCareers": "Generating NPC Careers...",
+      "StageTalents": "Generating NPC Talents...",
+
+      "StageCharacteristicsPrompt": "Based on the previous description, return the NPC's characteristics in JSON format. Fill in the characteristics fields with numerical values on a scale from 1 to 100, where 25 is an average value for a person, 50 means extensive experience in a given field, and 75 means an expert in a given field. Fill in the remaining fields with values in English. { \"npc\": { \"name\": \"\", \"characteristics\": { \"weaponSkill\": { \"value\": \"\" }, \"ballisticSkill\": { \"value\": \"\" }, \"strength\": { \"value\": \"\" }, \"toughness\": { \"value\": \"\" }, \"initiative\": { \"value\": \"\" }, \"agility\": { \"value\": \"\" }, \"dexterity\": { \"value\": \"\" }, \"intelligence\": { \"value\": \"\" }, \"willPower\": { \"value\": \"\" }, \"fellowship\": { \"value\": \"\" } }, \"details\": { \"species\": { \"value\": \"\" }, \"gender\": { \"value\": \"\" }, \"age\": { \"value\": \"\" }, \"height\": { \"value\": \"\" }, \"weight\": { \"value\": \"\" }, \"hair\": { \"value\": \"\" }, \"eyes\": { \"value\": \"\" } } } }",
+      "StageCareersPrompt": "For the NPC you have just generated, based on the generated description and biography, select from one to four appropriate professions from: ${careers}. Return selected names in JSON format. Do not change the case. Do not change the form.",
+      "StageTalentsPrompt": "For the NPC you have just generated, based on the generated description, biography and carrers, select four to eight appropriate talents from among: ${talents}. Return selected names in JSON format. Do not change the case. Do not change values or names. Don't change the names of talents.",
+
       "WS": "WS",
       "BS": "BS",
       "S": "S",

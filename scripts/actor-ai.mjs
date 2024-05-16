@@ -1,10 +1,13 @@
 
-import WfrpOpenAiApi from './api/wfrp-open-ai-api.mjs';
+import ActorAiOpenAiApi from './api/actor-ai-open-ai-api.mjs';
 import WfrpOpenAiDetailsApi from './api/wfrp-open-ai-details.mjs';
-import { Constants } from "./wfrp.mjs";
+import GenericOpenAiDetailsApi from './api/generic-open-ai-details.mjs';
+import { Constants } from "./actor.mjs";
+import ImageMidJourneyApi from './api/image-mj-api.mjs';
+import ImageOpenAiApi from './api/image-open-ai-api.mjs';
 
 /* FormApplication for ai actors */
-export default class WfrpAi extends FormApplication {
+export default class ActorAi extends FormApplication {
     static get defaultOptions() {
         const defaults = super.defaultOptions;
         const title = game.i18n.localize('AActors.General.SaveActorForm');
@@ -17,7 +20,7 @@ export default class WfrpAi extends FormApplication {
             title: title,
             userId: game.userId,
             resizable: true,
-            classes: defaults.classes.concat(["wfrp-ai"])
+            classes: defaults.classes.concat(["actor-ai"])
         };
         const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
         return mergedOptions;
@@ -70,8 +73,17 @@ export default class WfrpAi extends FormApplication {
 
         this.actor = null;
         this.actorInput = args[0];
-        this.api = new WfrpOpenAiApi();
-        this.apiDetails = new WfrpOpenAiDetailsApi();
+        this.api = new ActorAiOpenAiApi();
+        if (game.system.id == 'wfrp4e') {
+            this.apiDetails = new WfrpOpenAiDetailsApi();
+        } else {
+            this.apiDetails = new GenericOpenAiDetailsApi();
+        }
+        if (game.settings.get(Constants.ID, ImageMidJourneyApi.authorizationHeaderKey)) {
+            this.apiImage = new ImageMidJourneyApi();
+        } else {
+            this.apiImage = new ImageOpenAiApi();
+        }
 
         this.context = {
             init: true,
@@ -83,7 +95,7 @@ export default class WfrpAi extends FormApplication {
     async getData() { 
         const data = await super.getData();
 
-        let foldersArray = WfrpAi.getFolderOptions(game.folders);
+        let foldersArray = ActorAi.getFolderOptions(game.folders);
         let foldersFlat = foldersArray.flat(Infinity);
         let uniqueOptions = Array.from(new Map(foldersFlat.map(option => [option.value, option])).values());
         
@@ -101,6 +113,11 @@ export default class WfrpAi extends FormApplication {
                     await this.refresh(stage, request.npc);
                     request = await this.apiDetails.generateDetails(stage, request);
                 }
+                await this.refresh({stage: "image", message: game.i18n.localize("AActors.OpenAI.StageImage")}, request.npc);
+                let prompt = await this.api.generateImagePrompt();
+                this.actorInput.dalle = prompt;
+
+                request = await this.apiImage.generateImage(prompt);
                 await this.refresh({stage: "final", message: ""}, request.npc);
             });
         }
@@ -115,6 +132,8 @@ export default class WfrpAi extends FormApplication {
         super.activateListeners(html);
   
         html.on('click', "[data-action='save']", this._handleSaveButtonClick.bind(this));
+        html.on('click', "[data-action='generate']", this._handleGenerateImageButtonClick.bind(this));
+        html.on('click', "[data-action='upscale']", this._handleUpscaleButtonClick.bind(this));
     }
 
     async refresh(stage, npc) {
@@ -124,22 +143,43 @@ export default class WfrpAi extends FormApplication {
         this.render(true);
     }
 
+    async _handleGenerateImageButtonClick(event, data) {
+        let prompt = this.form['npc.dalle'].value;
+        this.actorInput.dalle = prompt;
+
+        let request = await this.apiImage.generateImage(prompt);
+        await this.refresh({stage: "final", message: ""}, request.npc);
+    }
+
+    async _handleUpscaleButtonClick(event, data) {
+        let messageId = event.currentTarget.parentElement.dataset['messageId']
+        let upscaleCustomId = event.currentTarget.dataset['customId']
+
+        let response = await this.apiImage.upscale(messageId, upscaleCustomId);
+
+        delete this.actorInput.upscale;
+        delete this.actorInput.messageId;
+        delete this.actorInput.upsacelers
+
+        await this.refresh({stage: "final", message: ""}, response.npc);
+    }
+
     async _handleSaveButtonClick(event, data) {
         let folderUuid = this.form.folder.value;
         
         let folder = game.folders.get(folderUuid);
-        let actorData = await this.api.prepareActorData(this.actorInput)
+        let actorData = await this.apiDetails.prepareActorData(this.actorInput)
         actorData.folder = folder;
 
         if (this.actorInput.imageBase64 != null) {
             let nameString = (actorData.name).replace(/\s+/g, '');
-            let newImg = await WfrpAi.saveImageToFileSystem(this.actorInput.imageBase64, nameString);
+            let newImg = await ActorAi.saveImageToFileSystem(this.actorInput.imageBase64, nameString);
             actorData.img = newImg.path;
         }
 
         let newActor = await Actor.create(actorData);
         let actor = game.actors.get(newActor.id);
-        let items = await this.api.prepareActorItemsData(this.actorInput);
+        let items = await this.apiDetails.prepareActorItemsData(this.actorInput);
         for (let item of items) {
             await actor.createEmbeddedDocuments("Item", [item]);
         }

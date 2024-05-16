@@ -21,24 +21,55 @@
           "Name": "System Prompt",
           "Hint": "Zapewnij kontekst (zapytanie systemowe) dla AI w celu wygenerowania BNa"
         }
+      },
+      "MJ": {
+        "authorizationHeader": {
+          "Name": "Discord Authorization Header",
+          "Hint": "Podaj token autoryzacji dostępu do Discord, szczegółowe informacje jak go znaleźć: https://medium.com/@useapi.net/interact-with-midjourney-using-discord-api-5a2e150f5e97"
+        },
+        "channelId": {
+          "Name": "Discord Channel Id",
+          "Hint": "Provide a Discord Channel Id"
+        },
+        "appId": {
+          "Name": "Midjourney App Id",
+          "Hint": "Provide an App Id"
+        },
+        "guildId": {
+          "Name": "Discord Guild Id",
+          "Hint": "Provide a Guild Id"
+        },
+        "sessionId": {
+          "Name": "Discord Session Id",
+          "Hint": "Provide a Session Id"
+        },
+        "imagineCommandVersionId": {
+          "Name": "MidJourney Imagine Command Version Id",
+          "Hint": "Provide an Imagine Command Version Id"
+        },
+        "imagineCommandId": {
+          "Name": "MidJourney Imagine Command Id",
+          "Hint": "Provide an Imagine Command Id"
+        }
       }
     },
     "Generate": {
       "OpenAI": {
         "DefaultSystemPrompt": "Jesteś pomocnym i kreatywnym asystentem Mistrza Gry w 4. edycji Warhammer Fantasy RPG. Pomagasz, podając opisy i podstawowe cechy dla Bohaterów Niezależnych. Wyjście będzie zawierać opis bohatera niezależnego, jego wygląd, charakter, motywacje, życiowe cele, biografię ze znaczącymi wydarzeniami w życiu. Korzystaj z opisu świata i historii Warhammer Fantasy, korzystaj z inspiracji innymi dziełami literatury fantasy. Używaj systemu metrycznego. Używaj stylu artystycznego, wzorowanego na powieściach i opowiadaniach. Nie używaj wyliczeń i wypunktowań. Opis zwróc w formacie html, bez css. Odpowiedź zwróć w języku polskim. Odpowiedź zwróć w formacie json. { description: \"\" }",
         "InitialMessage": "Generowanie opisu BNa...",
-        "StageCharacteristics": "Generowanie cech BNa...",
-        "StageCareers": "Generowanie profesji BNa...",
-        "StageTalents": "Generowanie talentów BNa...",
         "StageImage": "Generowanie portretu BNa...",
-
-        "StageCharacteristicsPrompt": " Na podstawie poprzedniego opisu, zwróć w formacie JSON statystyki bohatera niezależnego. Pola characteristics wypełnij wartościami liczbowymi w skali od 1 do 100, gdzie 30 to przeciętna wartość dla człowieka, 60 oznacza duże doświadczenie w danej dziedzinie, a 90 eksperta w danej dziedzinie. Pozostałe pola wypełnij wartościami w języku polskim. { \"npc\": { \"name\": \"\", \"characteristics\": { \"weaponSkill\": { \"value\": \"\" }, \"ballisticSkill\": { \"value\": \"\" }, \"strength\": { \"value\": \"\" }, \"toughness\": { \"value\": \"\" }, \"initiative\": { \"value\": \"\" }, \"agility\": { \"value\": \"\" }, \"dexterity\": { \"value\": \"\" }, \"intelligence\": { \"value\": \"\" }, \"willPower\": { \"value\": \"\" }, \"fellowship\": { \"value\": \"\" } }, \"details\": { \"species\": { \"value\": \"\" }, \"gender\": { \"value\": \"\" }, \"age\": { \"value\": \"\" }, \"height\": { \"value\": \"\" }, \"weight\": { \"value\": \"\" }, \"hair\": { \"value\": \"\" }, \"eyes\": { \"value\": \"\" } } } }",
-        "StageCareersPrompt": "Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii, wybierz od jednej do czterech adekwatnych profesji spośród: {careers}. Wybrane nazwy zwróć w formacie tabeli JSON. Nie zmieniaj wielkości liter. Nie zmieniaj formy żeńskiej na męską i odwrotnie.",
-        "StageTalentsPrompt": "Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii oraz profesji, wybierz od czterech do ośmiu  adekwatnych talentów spośród: {talents}. Wybrane nazwy zwróć w formacie tabeli JSON. Nie zmieniaj wielkości liter. Nie zmieniaj wartości ani nazw. Nie odmieniaj nazw talentów.",
         "StageImagePrompt": "Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii, przygotuj opis po angielsku na potrzeby generowania protretu. Opis powinien zaczynać się od 'Photographic, realistic, fantasy genere. A portrait of'. Wygenerowany opis zwróć w formacie JSON. { \"dalle\": \"\" }"
       }
     },
     "WFRP": {
+      "StageCharacteristics": "Generowanie cech BNa...",
+      "StageCareers": "Generowanie profesji BNa...",
+      "StageTalents": "Generowanie talentów BNa...",
+      
+      "StageCharacteristicsPrompt": " Na podstawie poprzedniego opisu, zwróć w formacie JSON statystyki bohatera niezależnego. Pola characteristics wypełnij wartościami liczbowymi w skali od 1 do 100, gdzie 25 to przeciętna wartość dla człowieka, 50 oznacza duże doświadczenie w danej dziedzinie, a 75 eksperta w danej dziedzinie. Pozostałe pola wypełnij wartościami w języku polskim. { \"npc\": { \"name\": \"\", \"characteristics\": { \"weaponSkill\": { \"value\": \"\" }, \"ballisticSkill\": { \"value\": \"\" }, \"strength\": { \"value\": \"\" }, \"toughness\": { \"value\": \"\" }, \"initiative\": { \"value\": \"\" }, \"agility\": { \"value\": \"\" }, \"dexterity\": { \"value\": \"\" }, \"intelligence\": { \"value\": \"\" }, \"willPower\": { \"value\": \"\" }, \"fellowship\": { \"value\": \"\" } }, \"details\": { \"species\": { \"value\": \"\" }, \"gender\": { \"value\": \"\" }, \"age\": { \"value\": \"\" }, \"height\": { \"value\": \"\" }, \"weight\": { \"value\": \"\" }, \"hair\": { \"value\": \"\" }, \"eyes\": { \"value\": \"\" } } } }",
+      "StageCareersPrompt": "Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii, wybierz od jednej do czterech adekwatnych profesji spośród: {careers}. Wybrane nazwy zwróć w formacie tabeli JSON. Nie zmieniaj wielkości liter. Nie zmieniaj formy żeńskiej na męską i odwrotnie.",
+      "StageTalentsPrompt": "Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii oraz profesji, wybierz od czterech do ośmiu  adekwatnych talentów spośród: {talents}. Wybrane nazwy zwróć w formacie tabeli JSON. Nie zmieniaj wielkości liter. Nie zmieniaj wartości ani nazw. Nie odmieniaj nazw talentów.",
+
       "WS": "WW",
       "BS": "WS",
       "S": "S",

@@ -1,9 +1,9 @@
 
-import { Constants } from "./wfrp.mjs";
-import WfrpAi from "./wfrp-ai.mjs";
+import { Constants } from "./actor.mjs";
+import ActorAi from "./actor-ai.mjs";
 
 /* FormApplication for ai actors */
-export default class WfrpAiInput extends FormApplication {
+export default class ActorAiInput extends FormApplication {
     static get defaultOptions() {
         const defaults = super.defaultOptions;
         const title = game.i18n.localize('AActors.General.PrepareInputForm');
@@ -16,7 +16,7 @@ export default class WfrpAiInput extends FormApplication {
             title: title,
             userId: game.userId,
             resizable: true,
-            classes: defaults.classes.concat(["wfrp-ai"]),
+            classes: defaults.classes.concat(["actor-ai"]),
             closeOnSubmit: false, // do not close when submitted
         };
       
@@ -41,6 +41,6 @@ export default class WfrpAiInput extends FormApplication {
 
     async _handleSendClick(event) {
         this.object.input = this.form.description.value;
-        new WfrpAi(this.object).render(true);
+        new ActorAi(this.object).render(true);
     }
 }
