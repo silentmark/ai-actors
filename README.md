@@ -43,11 +43,13 @@ Jesteś pomocnym i kreatywnym asystentem Mistrza Gry w 4. edycji Warhammer Fanta
 
 #### Image Generation
 
-Portrait generation can be done using Dall-E or MidJourney. If you would like to use MidJourney, all you have to do is to provide necessary configuration entries. Lack of them will fall back to Dall-E. Since MidJourney doesn't provide native API, to mimic discord prompts, please follow this pGuide](https://medium.com/@useapi.net/interact-with-midjourney-using-discord-api-5a2e150f5e97) to get necessary values. 
+Portrait generation can be done using Dall-E or MidJourney. If you would like to use MidJourney, all you have to do is to provide necessary configuration entries. Lack of them will fall back to Dall-E. Since MidJourney doesn't provide native API, to mimic discord prompts, please follow this [Guide](https://medium.com/@useapi.net/interact-with-midjourney-using-discord-api-5a2e150f5e97) to get necessary values. 
 
 #### Final Remarks
 
 This is initial version of the module and it still has a lot to do. If you would like to help me with supporting other systems, found bug or would like to suggest a feature, feel free to open a PR or Issue. 
+
+#### Special thanks to [Rachel Schutz](https://github.com/rachsg7) whoms original module was an inspiration to create this one. 
 
 #### TODO: 
 
