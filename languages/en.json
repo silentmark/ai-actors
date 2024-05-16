@@ -1,7 +1,7 @@
 {
   "AActors": {
     "General": {
-      "Create": "Create NPC",
+      "Create": "Generate AI NPC",
       "Send": "Send to AI",
       "DescriptionPlaceholder": "Type a description of a npc",
       "GenerateImage": "Generate Image",
