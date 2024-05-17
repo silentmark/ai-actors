@@ -1,4 +1,5 @@
 import { Constants } from "../actor.mjs";
+import InputModel from "../model/input-model.mjs";
 import ActorAiOpenAiApi from "./actor-ai-open-ai-api.mjs"
 import ImageMidJourneyApi from "./image-mj-api.mjs";
 
@@ -14,209 +15,227 @@ export default class WfrpOpenAiDetailsApi {
       {stage: "talents", message: game.i18n.localize("AActors.WFRP.StageTalents")}
     ];
   }
-  
-  async generateDetails(stage, requests) {
+
+  async updateStageInputModel(stage, inputModel) {
     if (WfrpOpenAiDetailsApi.careers === null) {
-        WfrpOpenAiDetailsApi.careers = await game.wfrp4e.utility.findAll("career");
+      WfrpOpenAiDetailsApi.careers = await game.wfrp4e.utility.findAll("career");
+    }
+    if (WfrpOpenAiDetailsApi.talents === null) {
+      WfrpOpenAiDetailsApi.talents = await game.wfrp4e.utility.findAll("talent");
+    }
+
+    if (stage.stage === "characteristics") { 
+      const statisticsQuery = game.i18n.localize("AActors.WFRP.StageCharacteristicsPrompt");
+      inputModel.TextPrompt += "\n" + statisticsQuery;
+      inputModel.JsonFormat.npc = inputModel.JsonFormat.npc || {};
+      inputModel.JsonFormat.npc.characteristics = inputModel.JsonFormat.npc.characteristics || {};
+      inputModel.JsonFormat.npc.characteristics.weaponSkill = { value: 0 };
+      inputModel.JsonFormat.npc.characteristics.ballisticSkill = { value: 0 };
+      inputModel.JsonFormat.npc.characteristics.strength = { value: 0 };
+      inputModel.JsonFormat.npc.characteristics.toughness = { value: 0 };
+      inputModel.JsonFormat.npc.characteristics.initiative = { value: 0 };
+      inputModel.JsonFormat.npc.characteristics.agility = { value: 0 };
+      inputModel.JsonFormat.npc.characteristics.dexterity = { value: 0 };
+      inputModel.JsonFormat.npc.characteristics.intelligence = { value: 0 };
+      inputModel.JsonFormat.npc.characteristics.willPower = { value: 0 };
+      inputModel.JsonFormat.npc.characteristics.fellowship = { value: 0 };
+      inputModel.JsonFormat.npc.name = "";
+      inputModel.JsonFormat.npc.details = inputModel.JsonFormat.npc.details || {};
+      inputModel.JsonFormat.npc.details.species = { value: "" };
+      inputModel.JsonFormat.npc.details.gender = { value: "" };
+      inputModel.JsonFormat.npc.details.age = { value: "" };
+      inputModel.JsonFormat.npc.details.height = { value: "" };
+      inputModel.JsonFormat.npc.details.weight = { value: "" };
+      inputModel.JsonFormat.npc.details.hair = { value: "" };
+      inputModel.JsonFormat.npc.details.eyes = { value: "" };
+    } else if (stage.stage === "careers") {
+      //const careersMessage = game.i18n.format("AActors.WFRP.StageCareersPrompt", { careers: WfrpOpenAiDetailsApi.careers.map(career => career.name).join(", ")})
+      const careersMessage = game.i18n.localize("AActors.WFRP.StageCareersPrompt");
+      inputModel.TextPrompt += "\n" + careersMessage;
+      inputModel.JsonFormat.npc = inputModel.JsonFormat.npc || {};
+      inputModel.JsonFormat.npc.careers = [];
+    } else if (stage.stage === "talents") {
+      //const talentsMessage = game.i18n.format("AActors.WFRP.StageTalentsPrompt", { talents: WfrpOpenAiDetailsApi.talents.map(talent => talent.name).join(", ") });
+      const talentsMessage = game.i18n.localize("AActors.WFRP.StageTalentsPrompt");
+      inputModel.TextPrompt += "\n" + talentsMessage;
+      inputModel.JsonFormat.npc = inputModel.JsonFormat.npc || {};
+      inputModel.JsonFormat.npc.talents = [];
+    }
+  }
+
+  async normalizeResponse(actorInput) {
+    let npc = actorInput.npc;
+    let originalCareers = foundry.utils.deepClone(npc.careers);
+    npc.careers = [];
+
+    npc.characteristics.weaponSkill.value = (Math.random() * 20 - 10) + Number(npc.characteristics.weaponSkill.value);
+    npc.characteristics.ballisticSkill.value = (Math.random() * 20 - 10) + Number(npc.characteristics.ballisticSkill.value);
+    npc.characteristics.strength.value = (Math.random() * 20 - 10) + Number(npc.characteristics.strength.value);
+    npc.characteristics.toughness.value = (Math.random() * 20 - 10) + Number(npc.characteristics.toughness.value);
+    npc.characteristics.initiative.value = (Math.random() * 20 - 10) + Number(npc.characteristics.initiative.value);
+    npc.characteristics.agility.value = (Math.random() * 20 - 10) + Number(npc.characteristics.agility.value);
+    npc.characteristics.dexterity.value = (Math.random() * 20 - 10) + Number(npc.characteristics.dexterity.value);
+    npc.characteristics.intelligence.value = (Math.random() * 20 - 10) + Number(npc.characteristics.intelligence.value);
+    npc.characteristics.willPower.value = (Math.random() * 20 - 10) + Number(npc.characteristics.willPower.value);
+    npc.characteristics.fellowship.value = (Math.random() * 20 - 10) + Number(npc.characteristics.fellowship.value);
+
+    for (let career of originalCareers) {
+      let co = WfrpOpenAiDetailsApi.careers.find(c => c.name === career || c.flags?.babele?.originalName === career);
+      if (!co) {
+        co = WfrpOpenAiDetailsApi.careers
+          .map(c => { return { 
+            name: c.name, 
+            uuid: c.uuid, 
+            index: c.flags?.babele?.originalName ? Math.min(WfrpOpenAiDetailsApi.levenshtein(c.name, career), WfrpOpenAiDetailsApi.levenshtein(c.flags.babele.originalName, career)) : WfrpOpenAiDetailsApi.levenshtein(c.name, career)
+          }; })
+          .filter(x => x.index < 10)
+          .sort((a, b) => a.index - b.index)[0];
       }
-      if (WfrpOpenAiDetailsApi.talents === null) {
-        WfrpOpenAiDetailsApi.talents = await game.wfrp4e.utility.findAll("talent");
+      if (co) {
+        npc.careers.push({name: co.name, uuid: co.uuid, originalName: career});
+      } else {
+        npc.careers.push({name: career, uuid: null});
       }
-      requests.talents = WfrpOpenAiDetailsApi.talents;
-      requests.careers = WfrpOpenAiDetailsApi.careers;
+    }
 
-      const OPENAI_API_KEY = game.settings.get(Constants.ID, ActorAiOpenAiApi.apiKey); // Replace with your actual API key
-      const url = 'https://api.openai.com/v1/chat/completions';
-      this.messages = requests.messages;
+    let originalTalents = foundry.utils.deepClone(npc.talents);
+    npc.talents = [];
 
-      let data = {
-        model: "gpt-4o",
-        response_format: { type: "json_object" },
-        messages: this.messages
-      };
-
-      if (stage.stage === "characteristics") { 
-        const statisticsQuery = game.i18n.localize("AActors.WFRP.StageCharacteristicsPrompt");
-
-        this.messages.push({ "role": "user", "content": statisticsQuery });
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${OPENAI_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        const responseData = await response.json();
-        let npc = responseData.choices[0].message.content;
-        npc = JSON.parse(npc);
-        requests.npc.characteristics = npc.npc.characteristics;
-        requests.npc.details = npc.npc.details;
-        requests.npc.name = npc.npc.name;
-
-        this.messages.push({ "role": "assistant", "content": responseData.choices[0].message.content });
+    for (let talent of originalTalents) {
+      let to = WfrpOpenAiDetailsApi.talents.find(t => t.name === talent || t.flags?.babele?.originalName === talent);
+      if (!to) {
+        to = WfrpOpenAiDetailsApi.talents
+          .map(t => { return { 
+            name: t.name, 
+            uuid: t.uuid, 
+            index: t.flags?.babele?.originalName ? Math.min(WfrpOpenAiDetailsApi.levenshtein(t.name, talent), WfrpOpenAiDetailsApi.levenshtein(t.flags.babele.originalName, talent)) : WfrpOpenAiDetailsApi.levenshtein(t.name, talent)
+          }; })
+          .filter(x => x.index < 10)
+          .sort((a, b) => a.index - b.index)[0];
       }
+      if (to) {
+        npc.talents.push({name: to.name, uuid: to.uuid, originalName: talent});
+      } else {
+        npc.talents.push({name: talent, uuid: null});
+      }
+    }
+  }
 
-      if (stage.stage === "careers") {
-        const careersMessage = game.i18n.format("AActors.WFRP.StageCareersPrompt", { careers: requests.careers.map(career => career.name).join(", ") }) + ` { "careers": [] }`;
-        this.messages.push({ "role": "user", "content": careersMessage });
+  prettyPrintNpc(actorInput) {
+    let npc = actorInput.npc;
+    let html = ``;
+    html += `<h1>${npc.name}</h1>`;
+    html += `<hr>`;
+    html += `
+    <div class="ability-block">
+        <table style="height:34px" border="1">
+            <tbody>
+                <tr style="height:17px">
+                    <td style="height:17px;width:60px;text-align:center">${game.i18n.localize("AActors.WFRP.WS")}</td>
+                    <td style="height:17px;width:60px;text-align:center">${game.i18n.localize("AActors.WFRP.BS")}</td>
+                    <td style="height:17px;width:60px;text-align:center">${game.i18n.localize("AActors.WFRP.S")}</td>
+                    <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.T")}</td>
+                    <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.I")}</td>
+                    <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Ag")}</td>
+                    <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Dex")}</td>
+                    <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Int")}</td>
+                    <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.WP")}</td>
+                    <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Fel")}</td>
+                </tr>
+                    <tr style="height:17px">                        
+                    <td style="height:17px;width:60px;text-align:center">${npc.characteristics?.weaponSkill.value}</td>
+                    <td style="height:17px;width:60px;text-align:center">${npc.characteristics?.ballisticSkill.value}</td>
+                    <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.strength.value}</td>
+                    <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.toughness.value}</td>
+                    <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.initiative.value}</td>
+                    <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.agility.value}</td>
+                    <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.dexterity.value}</td>
+                    <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.intelligence.value}</td>
+                    <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.willPower.value}</td>
+                    <td style="height:17px;width:60px;text-align:center">${npc.characteristics?.fellowship.value}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    `;
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${OPENAI_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        const responseData = await response.json();
-        let careers = responseData.choices[0].message.content;
-        careers = JSON.parse(careers);
-        requests.npc.careers = []; 
-        for (let career of careers.careers) {
-          let co = requests.careers.find(c => c.name === career);
-          if (!co) {
-            co = requests.careers.map(c => { return { name: c.name, uuid: c.uuid, index: WfrpOpenAiDetailsApi.levenshtein(c.name, career)}; }).sort((a, b) => a.index - b.index)[0];
+    html += `<p><strong>${game.i18n.localize("AActors.WFRP.Species")}:</strong> ${npc.details?.species?.value}, <strong>${game.i18n.localize("AActors.WFRP.Gender")}:</strong> ${npc.details?.gender?.value}</strong>, <strong>${game.i18n.localize("AActors.WFRP.Age")}:</strong> ${npc.details.age?.value}</p>`;
+    html += `<p><strong>${game.i18n.localize("AActors.WFRP.Height")}:</strong> ${npc.details?.height?.value}, <strong>${game.i18n.localize("AActors.WFRP.Weight")}:</strong> ${npc.details?.weight?.value} <strong>${game.i18n.localize("AActors.WFRP.Eyes")}:</strong> ${npc.details?.eyes?.value}, <strong>${game.i18n.localize("AActors.WFRP.Hair")}:</strong> ${npc.details?.hair?.value} </p>`;
+    html += `<p><strong>${game.i18n.localize("AActors.WFRP.Description")}:</strong> ${actorInput.description}<br></p>`;
+    html += `<p><strong>${game.i18n.localize("AActors.WFRP.Careers")}:</strong><ul>`;
+    if (npc.careers) {
+      for (let i of npc.careers) {
+        if (i.uuid) {
+          html += `<li><a class="content-link" draggable="true" data-id="null" data-uuid="${i.uuid}" data-tooltip=""><i class="fas fa-unlink"></i>${i.name}</a> [${i.originalName}]</li>`;
+        } else {
+          html += `<li>${i.name}</li>`;
+        }
+      }
+    }
+    html += `</ul></p>`;
+    html += `<p><strong>${game.i18n.localize("AActors.WFRP.Talents")}:</strong><ul>`;
+    if (npc.talents) {
+        for (let i of npc.talents) {
+          if (i.uuid) {
+            html += `<li><a class="content-link" draggable="true" data-id="null" data-uuid="${i.uuid}" data-tooltip=""><i class="fas fa-unlink"></i>${i.name}</a>[${i.originalName}]</li>`;
+          } else {
+            html += `<li>${i.name}</li>`;
           }
-          requests.npc.careers.push({name: co.name, uuid: co.uuid});
-        }
-        this.messages.push({ "role": "assistant", "content": responseData.choices[0].message.content });
       }
-
-      if (stage.stage === "talents") {
-        const talentsMessage = game.i18n.format("AActors.WFRP.StageTalentsPrompt", { talents: requests.talents.map(talent => talent.name).join(", ") }) + ` { "talents": [] }`;
-        this.messages.push({ "role": "user", "content": talentsMessage });
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${OPENAI_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        const responseData = await response.json();
-        let talents = responseData.choices[0].message.content;
-        talents = JSON.parse(talents);
-        requests.npc.talents = []; 
-        for (let talent of talents.talents) {
-          let co = requests.talents.find(c => c.name === talent);
-          if (!co) {
-            co = requests.talents.map(c => { return { name: c.name, uuid: c.uuid, index: WfrpOpenAiDetailsApi.levenshtein(c.name, talent)}; }).sort((a, b) => a.index - b.index)[0];
-          }
-          requests.npc.talents.push({name: co.name, uuid: co.uuid});
-        }
-        this.messages.push({ "role": "assistant", "content": responseData.choices[0].message.content });
     }
-      requests.npc.html = this.prettyPrintNpc(requests.npc);
-      return requests;
-    }
-
-    prettyPrintNpc(npc) {
-      let html = ``;
-      html += `<h1>${npc.name}</h1>`;
-      html += `<hr>`;
-      html += `
-      <div class="ability-block">
-          <table style="height:34px" border="1">
-              <tbody>
-                  <tr style="height:17px">
-                      <td style="height:17px;width:60px;text-align:center">${game.i18n.localize("AActors.WFRP.WS")}</td>
-                      <td style="height:17px;width:60px;text-align:center">${game.i18n.localize("AActors.WFRP.BS")}</td>
-                      <td style="height:17px;width:60px;text-align:center">${game.i18n.localize("AActors.WFRP.S")}</td>
-                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.T")}</td>
-                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.I")}</td>
-                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Ag")}</td>
-                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Dex")}</td>
-                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Int")}</td>
-                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.WP")}</td>
-                      <td style="height:17px;width:61px;text-align:center">${game.i18n.localize("AActors.WFRP.Fel")}</td>
-                  </tr>
-                      <tr style="height:17px">                        
-                      <td style="height:17px;width:60px;text-align:center">${npc.characteristics?.weaponSkill.value}</td>
-                      <td style="height:17px;width:60px;text-align:center">${npc.characteristics?.ballisticSkill.value}</td>
-                      <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.strength.value}</td>
-                      <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.toughness.value}</td>
-                      <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.initiative.value}</td>
-                      <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.agility.value}</td>
-                      <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.dexterity.value}</td>
-                      <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.intelligence.value}</td>
-                      <td style="height:17px;width:61px;text-align:center">${npc.characteristics?.willPower.value}</td>
-                      <td style="height:17px;width:60px;text-align:center">${npc.characteristics?.fellowship.value}</td>
-                  </tr>
-              </tbody>
-          </table>
-      </div>
-      <hr>
-      `;
-
-      html += `<p><strong>${game.i18n.localize("AActors.WFRP.Species")}:</strong> ${npc.details?.species?.value}, <strong>${game.i18n.localize("AActors.WFRP.Gender")}:</strong> ${npc.details?.gender?.value}</strong>, <strong>${game.i18n.localize("AActors.WFRP.Age")}:</strong> ${npc.details.age?.value}</p>`;
-      html += `<p><strong>${game.i18n.localize("AActors.WFRP.Height")}:</strong> ${npc.details?.height?.value}, <strong>${game.i18n.localize("AActors.WFRP.Weight")}:</strong> ${npc.details?.weight?.value} <strong>${game.i18n.localize("AActors.WFRP.Eyes")}:</strong> ${npc.details?.eyes?.value}, <strong>${game.i18n.localize("AActors.WFRP.Hair")}:</strong> ${npc.details?.hair?.value} </p>`;
-      html += `<p><strong>${game.i18n.localize("AActors.WFRP.Description")}:</strong> ${npc.description}<br></p>`;
-      html += `<p><strong>${game.i18n.localize("AActors.WFRP.Careers")}:</strong><ul>`;
-      if (npc.careers) {
-        for (let i of npc.careers) {
-            html += `<li><a class="content-link" draggable="true" data-id="null" data-uuid="${i.uuid}" data-tooltip=""><i class="fas fa-unlink"></i>${i.name}</a></li>`;
-        }
-      }
-      html += `</ul></p>`;
-      html += `<p><strong>${game.i18n.localize("AActors.WFRP.Talents")}:</strong><ul>`;
-      if (npc.talents) {
-          for (let i of npc.talents) {
-          html += `<li><a class="content-link" draggable="true" data-id="null" data-uuid="${i.uuid}" data-tooltip=""><i class="fas fa-unlink"></i>${i.name}</a></li>`;
-        }
-      }
-      html += `</ul></p>`;
-      return html;
-    }
+    html += `</ul></p>`;
+    return html;
+  }
     
-    async prepareActorData(npc) {
-        let data = {}; 
-        data.name = npc.name;
-        data.type = "npc";
-        data.system = {};
-        data.system.characteristics = {};
-        data.system.characteristics.ws = { initial: npc.characteristics.weaponSkill.value };
-        data.system.characteristics.bs = { initial: npc.characteristics.ballisticSkill.value };
-        data.system.characteristics.s = { initial: npc.characteristics.strength.value };
-        data.system.characteristics.t = { initial: npc.characteristics.toughness.value };
-        data.system.characteristics.i = { initial: npc.characteristics.initiative.value };
-        data.system.characteristics.ag = { initial: npc.characteristics.agility.value };
-        data.system.characteristics.dex = { initial: npc.characteristics.dexterity.value };
-        data.system.characteristics.int = { initial: npc.characteristics.intelligence.value };
-        data.system.characteristics.wp = { initial: npc.characteristics.willPower.value };
-        data.system.characteristics.fel = { initial: npc.characteristics.fellowship.value };
+  async prepareActorData(actorInput) {
+    let npc = actorInput.npc;
+    let data = {}; 
+    data.name = npc.name;
+    data.type = "npc";
+    data.system = {};
+    data.system.characteristics = {};
+    data.system.characteristics.ws = { initial: npc.characteristics.weaponSkill.value };
+    data.system.characteristics.bs = { initial: npc.characteristics.ballisticSkill.value };
+    data.system.characteristics.s = { initial: npc.characteristics.strength.value };
+    data.system.characteristics.t = { initial: npc.characteristics.toughness.value };
+    data.system.characteristics.i = { initial: npc.characteristics.initiative.value };
+    data.system.characteristics.ag = { initial: npc.characteristics.agility.value };
+    data.system.characteristics.dex = { initial: npc.characteristics.dexterity.value };
+    data.system.characteristics.int = { initial: npc.characteristics.intelligence.value };
+    data.system.characteristics.wp = { initial: npc.characteristics.willPower.value };
+    data.system.characteristics.fel = { initial: npc.characteristics.fellowship.value };
+
+    data.system.details = {};
+    data.system.details.species = { value: npc.details.species.value };
+    data.system.details.gender = { value: npc.details.gender.value };
+    data.system.details.hair = { value: npc.details.hair.value };
+    data.system.details.eyes = { value: npc.details.eyes.value };
+    data.system.details.age = { value: npc.details.age.value };
+    data.system.details.height = { value: npc.details.height.value };
+    data.system.details.weight = { value: npc.details.weight.value };
+    data.system.details.biography = { value: actorInput.description };
+    
+    return data;
+    }
   
-        data.system.details = {};
-        data.system.details.species = { value: npc.details.species.value };
-        data.system.details.gender = { value: npc.details.gender.value };
-        data.system.details.hair = { value: npc.details.hair.value };
-        data.system.details.eyes = { value: npc.details.eyes.value };
-        data.system.details.age = { value: npc.details.age.value };
-        data.system.details.height = { value: npc.details.height.value };
-        data.system.details.weight = { value: npc.details.weight.value };
-        data.system.details.biography = { value: npc.description };
-        
-        return data;
-      }
-  
-      async prepareActorItemsData(npc) {
-        let data = [];
-        for (let t of npc.talents) {
-          let talent = await fromUuid(t.uuid);
-          if (talent) {
-            data.push(talent);
-          }
+    async prepareActorItemsData(actorInput) {
+      let npc = actorInput.npc;
+      let data = [];
+      for (let t of npc.talents) {
+        let talent = await fromUuid(t.uuid);
+        if (talent) {
+          data.push(talent);
         }
-        for (let c of npc.careers) {
-          let career = await fromUuid(c.uuid);
-          if (career) {
-            data.push(career);
-          }
-        }
-        return data;
       }
+      for (let c of npc.careers) {
+        let career = await fromUuid(c.uuid);
+        if (career) {
+          data.push(career);
+        }
+      }
+      return data;
+    }
   
     static levenshtein(s, t) {
       if (s === t) {
@@ -312,5 +331,5 @@ export default class WfrpOpenAiDetailsApi {
       }
   
       return h;
-  }  
+    }  
 }

@@ -131,7 +131,7 @@ export default class ImageMidJourneyApi {
       }
   }
 
-    async generateImage(prompt) {
+    async generateImage(prompt, actorInput) {
 
       const authorizationHeader = game.settings.get(Constants.ID, ImageMidJourneyApi.authorizationHeaderKey); // Replace with your actual API key
       const appId = game.settings.get(Constants.ID, ImageMidJourneyApi.appIdKey);
@@ -201,24 +201,22 @@ export default class ImageMidJourneyApi {
             if (attachment.filename.includes('png')) {
               let base64 =  await this.getBase64Image(attachment.url);
 
-              responseData = {}
-              responseData.npc = {};
-              responseData.npc.imageSrc = 'data:image/png;base64,' + base64;
-              responseData.npc.imageBase64 = base64;
-              responseData.npc.upscale = true;
-              responseData.npc.messageId = matchingMessage.id;
-              responseData.npc.uniqueId = uniqueId;
-              responseData.npc.upsacelers = [];
+              actorInput.imageSrc = 'data:image/png;base64,' + base64;
+              actorInput.imageBase64 = base64;
+              actorInput.upscale = true;
+              actorInput.messageId = matchingMessage.id;
+              actorInput.uniqueId = uniqueId;
+              actorInput.upsacelers = [];
 
               for (let component of matchingMessage.components) {
                 for (let c of component.components) {
                   if (c.label && c.label[0] === "U") {
-                    responseData.npc.upsacelers.push(c.custom_id);
+                    actorInput.upsacelers.push(c.custom_id);
                   }
                 }
               }
       
-              return responseData;
+              return;
             }
           }
         }
@@ -295,9 +293,9 @@ export default class ImageMidJourneyApi {
               let base64 =  await this.getBase64Image(attachment.url);
 
               responseData = {}
-              responseData.npc = {};
-              responseData.npc.imageSrc = 'data:image/png;base64,' + base64;
-              responseData.npc.imageBase64 = base64;
+              responseData.actorInput = {};
+              responseData.actorInput.imageSrc = 'data:image/png;base64,' + base64;
+              responseData.actorInput.imageBase64 = base64;
               return responseData;
             }
           }

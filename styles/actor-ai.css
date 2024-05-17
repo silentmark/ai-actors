@@ -5,11 +5,11 @@
 }
 
 .actor-ai-img {
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 320px;
+    max-width: 320px;
     padding: 5px;
     max-height: 100%;
-    min-height: 200px;
+    min-height: 320px;
     display: flex;
     flex-flow: column;
 }
@@ -52,6 +52,7 @@
 }
 
 .actor-ai-image-description {
+    height: 200px;
     padding: 5px !important;
     background: none;
     margin: 3px;

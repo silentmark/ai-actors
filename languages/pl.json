@@ -20,6 +20,26 @@
         "systemPrompt": {
           "Name": "System Prompt",
           "Hint": "Zapewnij kontekst (zapytanie systemowe) dla AI w celu wygenerowania BNa"
+        },
+        "frequencyPenalty": {
+          "Name": "Kara Częstotliwości",
+          "Hint": "Podaj wartość 'frequency_penalty' dla AI w celu wygenerowania NPC, https://platform.openai.com/docs/api-reference/chat/create#chat-create-frequency_penalty"
+        },
+        "presencePenalty": {
+          "Name": "Kara Obecności",
+          "Hint": "Podaj wartość 'presence_penalty' dla AI w celu wygenerowania NPC, https://platform.openai.com/docs/api-reference/chat/create#chat-create-presence_penalty"
+        },
+        "maxTokens": {
+          "Name": "Maksymalna liczba tokenów",
+          "Hint": "Podaj wartość 'max_tokens' dla AI w celu wygenerowania NPC, https://platform.openai.com/docs/api-reference/chat/create#chat-create-max_tokens"
+        },
+        "temperature": {
+          "Name": "Temperature",
+          "Hint": "Podaj wartość 'temperature' AI w celu wygenerowania NPC, https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature"
+        },
+        "topP": {
+          "Name": "Top P",
+          "Hint": "Podaj wartość 'top_P' dla sztucznej inteligencji w celu wygenerowania NPC, https://platform.openai.com/docs/api-reference/chat/create#chat-create-top_p"
         }
       },
       "MJ": {
@@ -53,22 +73,17 @@
         }
       }
     },
-    "Generate": {
-      "OpenAI": {
-        "DefaultSystemPrompt": "Jesteś pomocnym i kreatywnym asystentem Mistrza Gry w 4. edycji Warhammer Fantasy RPG. Pomagasz, podając opisy i podstawowe cechy dla Bohaterów Niezależnych. Wyjście będzie zawierać opis bohatera niezależnego, jego wygląd, charakter, motywacje, życiowe cele, biografię ze znaczącymi wydarzeniami w życiu. Korzystaj z opisu świata i historii Warhammer Fantasy, korzystaj z inspiracji innymi dziełami literatury fantasy. Używaj systemu metrycznego. Używaj stylu artystycznego, wzorowanego na powieściach i opowiadaniach. Nie używaj wyliczeń i wypunktowań. Opis zwróc w formacie html, bez css. Odpowiedź zwróć w języku polskim. Odpowiedź zwróć w formacie json. { description: \"\" }",
-        "InitialMessage": "Generowanie opisu BNa...",
-        "StageImage": "Generowanie portretu BNa...",
-        "StageImagePrompt": "Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii, przygotuj opis po angielsku na potrzeby generowania protretu. Opis powinien zaczynać się od 'Photographic, realistic, fantasy genere. A portrait of'. Wygenerowany opis zwróć w formacie JSON. { \"dalle\": \"\" }"
-      }
+    "OpenAI": {
+      "DefaultSystemPrompt": "Jesteś pomocnym i kreatywnym asystentem Mistrza Gry w 4. edycji Warhammer Fantasy RPG. Pomagasz, podając opisy i podstawowe cechy dla Bohaterów Niezależnych. Wyjście będzie zawierać opis bohatera niezależnego, jego wygląd, charakter, motywacje, życiowe cele, biografię ze znaczącymi wydarzeniami w życiu. Korzystaj z opisu świata i historii Warhammer Fantasy, korzystaj z inspiracji innymi dziełami literatury fantasy. Nie używaj dosłownych zwrotów z zapytania. Używaj systemu metrycznego. Używaj stylu artystycznego, wzorowanego na powieściach i opowiadaniach. Nie używaj wyliczeń i wypunktowań. Opis zwróc w formacie html, bez css. Odpowiedź zwróć w języku polskim. Odpowiedź zwróć w formacie JSON zdefiniowanym na końcu.",
+      "InitialMessage": "Generowanie opisu BNa...",
+
+      "StageImage": "Generowanie portretu BNa...",
+      "StageImagePrompt": "- Jako ostatni krok, na podstawie przygotowanego opisu i biografii, przygotuj opis wyglądu po angielsku na potrzeby generowania portretu. Opis powinien zaczynać się od 'Photographic, realistic, subtle, fantasy setting. A portrait of'."
     },
-    "WFRP": {
-      "StageCharacteristics": "Generowanie cech BNa...",
-      "StageCareers": "Generowanie profesji BNa...",
-      "StageTalents": "Generowanie talentów BNa...",
-      
-      "StageCharacteristicsPrompt": " Na podstawie poprzedniego opisu, zwróć w formacie JSON statystyki bohatera niezależnego. Pola characteristics wypełnij wartościami liczbowymi w skali od 1 do 100, gdzie 25 to przeciętna wartość dla człowieka, 50 oznacza duże doświadczenie w danej dziedzinie, a 75 eksperta w danej dziedzinie. Pozostałe pola wypełnij wartościami w języku polskim. { \"npc\": { \"name\": \"\", \"characteristics\": { \"weaponSkill\": { \"value\": \"\" }, \"ballisticSkill\": { \"value\": \"\" }, \"strength\": { \"value\": \"\" }, \"toughness\": { \"value\": \"\" }, \"initiative\": { \"value\": \"\" }, \"agility\": { \"value\": \"\" }, \"dexterity\": { \"value\": \"\" }, \"intelligence\": { \"value\": \"\" }, \"willPower\": { \"value\": \"\" }, \"fellowship\": { \"value\": \"\" } }, \"details\": { \"species\": { \"value\": \"\" }, \"gender\": { \"value\": \"\" }, \"age\": { \"value\": \"\" }, \"height\": { \"value\": \"\" }, \"weight\": { \"value\": \"\" }, \"hair\": { \"value\": \"\" }, \"eyes\": { \"value\": \"\" } } } }",
-      "StageCareersPrompt": "Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii, wybierz od jednej do czterech adekwatnych profesji spośród: {careers}. Wybrane nazwy zwróć w formacie tabeli JSON. Nie zmieniaj wielkości liter. Nie zmieniaj formy żeńskiej na męską i odwrotnie.",
-      "StageTalentsPrompt": "Dla wygenerowanego przed chwilą NPC, na podstawie wygenerowanego opisu i biografii oraz profesji, wybierz od czterech do ośmiu  adekwatnych talentów spośród: {talents}. Wybrane nazwy zwróć w formacie tabeli JSON. Nie zmieniaj wielkości liter. Nie zmieniaj wartości ani nazw. Nie odmieniaj nazw talentów.",
+    "WFRP": {      
+      "StageCharacteristicsPrompt": "- Na podstawie przygotowanego opisu, zwróć w formacie JSON statystyki bohatera niezależnego. Pola characteristics wypełnij wartościami liczbowymi w skali od 1 do 100, gdzie 25 to przeciętna wartość dla człowieka, 50 oznacza duże doświadczenie w danej dziedzinie, a 75 eksperta w danej dziedzinie. Pozostałe pola wypełnij wartościami w języku polskim.",
+      "StageCareersPrompt": "- Na podstawie poprzednich kroków wybierz, w zależności od doświadczenia postaci, od jednej do czterech pasujących profesji spośród dostępnych w podręczniku do angielskiej wersji systemu WFRP 4ed. Dla młodych i niedoświadczonych postaci zwróć jedną, dla średnio doświadczonych dwie, dla ekspertów lub wyjątkowo starych i doświadczonych postaci zwróć trzy, dla legendarnych i sławnych postaci, zwróć cztery. Wybrane nazwy zwróć w formacie płaskiej tabeli stringów JSON. Nie zmieniaj wielkości liter. Nie zmieniaj formy żeńskiej na męską i odwrotnie. ",
+      "StageTalentsPrompt": "- Na podstawie opisu, biografii i profesji z poprzednich kroków, wybierz Talenty spośród dostępnych w podręczniku do angielskiej wersji systemu WFRP 4ed. Dla każdej profesji, wybierz trzy. Wybrane nazwy zwróć w formacie płaskiej tabeli stringów JSON. Nie zmieniaj wielkości liter. Nie zmieniaj wartości ani nazw. Nie odmieniaj nazw talentów.",
 
       "WS": "WW",
       "BS": "WS",

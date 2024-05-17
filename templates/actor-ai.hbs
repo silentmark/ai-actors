@@ -2,20 +2,20 @@
     <div class="actor-ai-gen-window">
         <div class="actor-ai-response">
             <div class="actor-ai-img">
-                {{#if npc.imageSrc}}
-                    <img class="actor-ai-img-gen" src="{{npc.imageSrc}}">
+                {{#if actorInput.imageSrc}}
+                    <img class="actor-ai-img-gen" src="{{actorInput.imageSrc}}">
                 {{else}}
                     <img class="actor-ai-img-gen" src="icons/svg/mystery-man.svg">
                 {{/if}}
                 {{#if (eq context.stage "final")}}
-                    <textarea name="npc.dalle" class="actor-ai-image-description">{{npc.dalle}}</textarea>
+                    <textarea name="actorInput.imagePrompt" class="actor-ai-image-description">{{actorInput.imagePrompt}}</textarea>
                     <div class="actor-ai-img-buttons">
                         <button type="button" data-action="generate">{{localize "AActors.General.GenerateImage"}}</button>
                     </div>
                     
-                    {{#if (eq npc.upscale true)}}
-                    <div class="actor-ai-img-buttons" data-message-id="{{npc.messageId}}" >
-                        {{#each npc.upsacelers as |upscale i|}}
+                    {{#if (eq actorInput.upscale true)}}
+                    <div class="actor-ai-img-buttons" data-message-id="{{actorInput.messageId}}" >
+                        {{#each actorInput.upsacelers as |upscale i|}}
                             <button type="button" data-custom-id="{{upscale}}" data-action="upscale">U{{i}}</button>
                         {{/each}}
                     </div>
@@ -23,7 +23,7 @@
                 {{/if}}
             </div>
             {{#if (ne context.stage "init")}}
-                {{editor npc.html target="npc.html" engine="prosemirror" button=true owner=owner editable=editable}}
+                {{editor actorInput.html target="actorInput.html" engine="prosemirror" button=true owner=owner editable=editable}}
             {{/if}}
         </div>
         <div class="actor-ai-loader-wrapper">

@@ -5,6 +5,7 @@ import GenericOpenAiDetailsApi from './api/generic-open-ai-details.mjs';
 import { Constants } from "./actor.mjs";
 import ImageMidJourneyApi from './api/image-mj-api.mjs';
 import ImageOpenAiApi from './api/image-open-ai-api.mjs';
+import InputModel from './model/input-model.mjs';
 
 /* FormApplication for ai actors */
 export default class ActorAi extends FormApplication {
@@ -101,24 +102,31 @@ export default class ActorAi extends FormApplication {
         
         data.context = this.context;
         data.folders = uniqueOptions;
-        data.npc = this.actorInput;
+        data.actorInput = this.actorInput;
+        if (!this.apiInput) {
+            this.apiInput = new InputModel(this.object.input);
+        }
 
         if (this.context.init) {
             this.context.init = false;
-            this.api.generateDescription(this.object.input).then(async (response) => {
+            this.refresh({stage: "initial", message: game.i18n.localize("AActors.OpenAI.InitialMessage")}).then(async () => {
+                let postData = this.api.prepareBasicPrompt();
                 let stages = this.apiDetails.stages;
-                let request = response;
-                request.npc.html = request.npc.description;
                 for (let stage of stages) {
-                    await this.refresh(stage, request.npc);
-                    request = await this.apiDetails.generateDetails(stage, request);
+                    await this.apiDetails.updateStageInputModel(stage, this.apiInput);
                 }
-                await this.refresh({stage: "image", message: game.i18n.localize("AActors.OpenAI.StageImage")}, request.npc);
-                let prompt = await this.api.generateImagePrompt();
-                this.actorInput.dalle = prompt;
+                await this.api.updateInputModelWithImagePrompt(this.apiInput);
+    
+                let actorInput = await this.api.generateDescription(postData, this.apiInput);                
+                await this.apiDetails.normalizeResponse(actorInput);
+                this.actorInput = foundry.utils.mergeObject(this.actorInput, actorInput);
+                this.actorInput.html = this.apiDetails.prettyPrintNpc(this.actorInput);
 
-                request = await this.apiImage.generateImage(prompt);
-                await this.refresh({stage: "final", message: ""}, request.npc);
+                
+                await this.refresh({stage: "image", message: game.i18n.localize("AActors.OpenAI.StageImage")});
+                await this.apiImage.generateImage(this.actorInput.imagePrompt, this.actorInput);
+                
+                await this.refresh({stage: "final", message: ""});
             });
         }
         return data;
@@ -136,32 +144,36 @@ export default class ActorAi extends FormApplication {
         html.on('click', "[data-action='upscale']", this._handleUpscaleButtonClick.bind(this));
     }
 
-    async refresh(stage, npc) {
+    async refresh(stage) {
         this.context.stage = stage.stage;
         this.context.stageDescription = stage.message;
-        this.actorInput = foundry.utils.mergeObject(this.actorInput, npc);
         this.render(true);
     }
 
     async _handleGenerateImageButtonClick(event, data) {
-        let prompt = this.form['npc.dalle'].value;
-        this.actorInput.dalle = prompt;
+        let prompt = this.form['actorInput.imagePrompt'].value;
+        
+        let actorInput = foundry.utils.deepClone(this.actorInput);
+        actorInput.imagePrompt = prompt;
 
-        let request = await this.apiImage.generateImage(prompt);
-        await this.refresh({stage: "final", message: ""}, request.npc);
+        await this.refresh({stage: "image", message: game.i18n.localize("AActors.OpenAI.StageImage")});
+        await this.apiImage.generateImage(prompt, this.actorInput);
+        await this.refresh({stage: "final", message: ""});
     }
 
     async _handleUpscaleButtonClick(event, data) {
         let messageId = event.currentTarget.parentElement.dataset['messageId']
         let upscaleCustomId = event.currentTarget.dataset['customId']
 
-        let response = await this.apiImage.upscale(messageId, upscaleCustomId);
+        await this.refresh({stage: "image", message: game.i18n.localize("AActors.OpenAI.StageImage")});
 
+        let response = await this.apiImage.upscale(messageId, upscaleCustomId);
         delete this.actorInput.upscale;
         delete this.actorInput.messageId;
         delete this.actorInput.upsacelers
+        this.actorInput = foundry.utils.mergeObject(this.actorInput, response.actorInput);
 
-        await this.refresh({stage: "final", message: ""}, response.npc);
+        await this.refresh({stage: "final", message: ""});
     }
 
     async _handleSaveButtonClick(event, data) {

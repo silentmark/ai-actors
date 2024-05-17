@@ -3,7 +3,7 @@ import ActorAiOpenAiApi from "./actor-ai-open-ai-api.mjs";
 
 export default class ImageOpenAiApi {
 
-    async generateImage(prompt) {
+    async generateImage(prompt, actorInput) {
       const OPENAI_API_KEY = game.settings.get(Constants.ID, ActorAiOpenAiApi.apiKey); // Replace with your actual API key
 
       const dalleUrl = 'https://api.openai.com/v1/images/generations';
@@ -26,10 +26,7 @@ export default class ImageOpenAiApi {
 
       const responseDalleData = await responseDalle.json();
       
-      responseData = {}
-      responseData.npc = {};
-      responseData.npc.imageSrc = 'data:image/png;base64,' + responseDalleData.data[0].b64_json;
-      responseData.npc.imageBase64 = responseDalleData.data[0].b64_json;
-      return responseData;
+      actorInput.imageSrc = 'data:image/png;base64,' + responseDalleData.data[0].b64_json;
+      actorInput.imageBase64 = responseDalleData.data[0].b64_json;
     }
 }

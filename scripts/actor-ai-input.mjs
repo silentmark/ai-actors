@@ -41,6 +41,7 @@ export default class ActorAiInput extends FormApplication {
 
     async _handleSendClick(event) {
         this.object.input = this.form.description.value;
-        new ActorAi(this.object).render(true);
+        let newObject = foundry.utils.deepClone(this.object);
+        new ActorAi(newObject).render(true);
     }
 }
