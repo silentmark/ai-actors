@@ -65,7 +65,7 @@ export default class WfrpOpenAiDetailsApi {
 
   async normalizeResponse(actorInput) {
     let npc = actorInput.npc;
-    let originalCareers = foundry.utils.deepClone(npc.careers);
+    let originalCareers = foundry.utils.deepClone(npc.careers) ?? foundry.utils.deepClone(npc._careers);
     npc.careers = [];
 
     npc.characteristics.weaponSkill.value = Math.floor(Math.random() * 20 - 10) + Number(npc.characteristics.weaponSkill.value);
@@ -98,7 +98,7 @@ export default class WfrpOpenAiDetailsApi {
       }
     }
 
-    let originalTalents = foundry.utils.deepClone(npc.talents);
+    let originalTalents = foundry.utils.deepClone(npc.talents) ?? foundry.utils.deepClone(npc._talents);
     npc.talents = [];
 
     for (let talent of originalTalents) {
