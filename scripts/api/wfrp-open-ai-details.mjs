@@ -68,16 +68,16 @@ export default class WfrpOpenAiDetailsApi {
     let originalCareers = foundry.utils.deepClone(npc.careers);
     npc.careers = [];
 
-    npc.characteristics.weaponSkill.value = (Math.random() * 20 - 10) + Number(npc.characteristics.weaponSkill.value);
-    npc.characteristics.ballisticSkill.value = (Math.random() * 20 - 10) + Number(npc.characteristics.ballisticSkill.value);
-    npc.characteristics.strength.value = (Math.random() * 20 - 10) + Number(npc.characteristics.strength.value);
-    npc.characteristics.toughness.value = (Math.random() * 20 - 10) + Number(npc.characteristics.toughness.value);
-    npc.characteristics.initiative.value = (Math.random() * 20 - 10) + Number(npc.characteristics.initiative.value);
-    npc.characteristics.agility.value = (Math.random() * 20 - 10) + Number(npc.characteristics.agility.value);
-    npc.characteristics.dexterity.value = (Math.random() * 20 - 10) + Number(npc.characteristics.dexterity.value);
-    npc.characteristics.intelligence.value = (Math.random() * 20 - 10) + Number(npc.characteristics.intelligence.value);
-    npc.characteristics.willPower.value = (Math.random() * 20 - 10) + Number(npc.characteristics.willPower.value);
-    npc.characteristics.fellowship.value = (Math.random() * 20 - 10) + Number(npc.characteristics.fellowship.value);
+    npc.characteristics.weaponSkill.value = Math.floor(Math.random() * 20 - 10) + Number(npc.characteristics.weaponSkill.value);
+    npc.characteristics.ballisticSkill.value = Math.floor(Math.random() * 20 - 10) + Number(npc.characteristics.ballisticSkill.value);
+    npc.characteristics.strength.value = Math.floor(Math.random() * 20 - 10) + Number(npc.characteristics.strength.value);
+    npc.characteristics.toughness.value = Math.floor(Math.random() * 20 - 10) + Number(npc.characteristics.toughness.value);
+    npc.characteristics.initiative.value = Math.floor(Math.random() * 20 - 10) + Number(npc.characteristics.initiative.value);
+    npc.characteristics.agility.value = Math.floor(Math.random() * 20 - 10) + Number(npc.characteristics.agility.value);
+    npc.characteristics.dexterity.value = Math.floor(Math.random() * 20 - 10) + Number(npc.characteristics.dexterity.value);
+    npc.characteristics.intelligence.value = Math.floor(Math.random() * 20 - 10) + Number(npc.characteristics.intelligence.value);
+    npc.characteristics.willPower.value = Math.floor(Math.random() * 20 - 10) + Number(npc.characteristics.willPower.value);
+    npc.characteristics.fellowship.value = Math.floor(Math.random() * 20 - 10) + Number(npc.characteristics.fellowship.value);
 
     for (let career of originalCareers) {
       let co = WfrpOpenAiDetailsApi.careers.find(c => c.name === career || c.flags?.babele?.originalName === career);

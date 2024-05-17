@@ -78,12 +78,12 @@
       "InitialMessage": "Generating NPC Description...",
 
       "ImageMessage": "Generating NPC Image...",
-      "StageImagePrompt": "Finally, based on all prepared content, prepare description in English for the purpose of generating an Image using Dall-E. The description should start with 'Photographic, realistic, fantasy setting. A portrait of'. Return the generated description in JSON format."
+      "StageImagePrompt": "- Finally, based on all prepared content, prepare description in English for the purpose of generating an Image using Dall-E. The description should start with 'Photographic, realistic, fantasy setting. A portrait of'. Return the generated description in JSON format."
     },
     "WFRP": {
-      "StageCharacteristicsPrompt": "Based on prepared description, return the NPC's characteristics in JSON format. Fill in the characteristics fields with numerical values on a scale from 1 to 100, where 25 is an average value for a person, 50 means extensive experience in a given field, and 75 means an expert in a given field. Fill in the remaining fields with values in English",
-      "StageCareersPrompt": "Based on previous steps, select from one to four appropriate professions from: ${careers}. Return selected names in JSON format. Do not change the case. Do not change the form.",
-      "StageTalentsPrompt": "Based on previous steps, select four to eight appropriate talents from among: ${talents}. Return selected names in JSON format. Do not change the case. Do not change values or names. Don't change the names of talents.",
+      "StageCharacteristicsPrompt": "- Based on previous step, return the NPC's characteristics in JSON format. Fill in the characteristics fields with numerical values on a scale from 1 to 100, where 25 is an average value for a person, 50 means extensive experience in a given field, and 75 means an expert in a given field.",
+      "StageCareersPrompt": "- Based on the previous steps, depending on NPC's experience, select from one to four suitable careers from those available in the English version of the WFRP 4ed handbook. For young and inexperienced characters, return one, for intermediate characters, return two, for expert or extremely old and experienced characters, return three, for legendary and famous characters, return four. Return the selected names in a flat JSON string table format. Do not change the case.",
+      "StageTalentsPrompt": "- Based on previous steps, select Talents from those available in the English version of WFRP 4ed handbook. For each career, choose three. Return the selected names in a flat JSON string table format. Do not change the case. Do not change values. Don't change the names of talents.",
 
       "WS": "WS",
       "BS": "BS",
