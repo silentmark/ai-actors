@@ -21,12 +21,7 @@ export default class ActorAiOpenAiApi {
         config: true,
         restricted: true,
         hint: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.systemPromptKey}.Hint`,
-        default: `
-          Jesteś pomocnym i kreatywnym asystentem Mistrza Gry w 4. edycji Warhammer Fantasy RPG. Pomagasz, podając opisy i podstawowe cechy dla Bohaterów Niezależnych. Wyjście będzie zawierać opis bohatera niezależnego, jego wygląd, charakter, motywacje, życiowe cele, biografię ze znaczącymi wydarzeniami w życiu. Korzystaj z opisu świata i historii Warhammer Fantasy, korzystaj z inspiracji innymi dziełami literatury fantasy. Używaj systemu metrycznego. Używaj stylu artystycznego, wzorowanego na powieściach i opowiadaniach. Nie używaj wyliczeń i wypunktowań. Opis zwróc w formacie html, bez css. Odpowiedź zwróć w języku polskim. Odpowiedź zwróć w formacie json.
-          { 
-            description: ""
-          }
-        `
+        default: `You are a helpful and creative assistant to the Game Master in 4th Edition Warhammer Fantasy RPG. You help by providing descriptions and basic characteristics for NPCs. Use the lore and history of Warhammer Fantasy World and be inspired by other fantasy literature or movies. Use an artistic style based on novels and stories. Do not use calculations and bullet points.`
       });
 
       game.settings.register(Constants.ID, ActorAiOpenAiApi.frequencyPenaltyKey, {
@@ -36,7 +31,7 @@ export default class ActorAiOpenAiApi {
         scope: "world",
         config: true,
         restricted: true,
-        default: 0.5,
+        default: 0.33,
         hint: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.frequencyPenaltyKey}.Hint`
       });
 
@@ -47,7 +42,7 @@ export default class ActorAiOpenAiApi {
         scope: "world",
         config: true,
         restricted: true,
-        default: 0.5,
+        default: 0.33,
         hint: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.presencePenaltyKey}.Hint`
       });
 
@@ -69,7 +64,7 @@ export default class ActorAiOpenAiApi {
         scope: "world",
         config: true,
         restricted: true,
-        default: 0.2,
+        default: 0.3,
         hint: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.topPKey}.Hint`
       });
 
@@ -80,8 +75,19 @@ export default class ActorAiOpenAiApi {
         scope: "world",
         config: true,
         restricted: true,
-        default: 1000,
+        default: 3000,
         hint: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.maxTokensKey}.Hint`
+      });
+
+      game.settings.register(Constants.ID, ActorAiOpenAiApi.imageAdditionalQualitiesKey, {
+        name: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.imageAdditionalQualitiesKey}.Name`,
+        default: "",
+        type: String,
+        scope: "world",
+        config: true,
+        restricted: true,
+        default: "Photographic, realistic, subtle, fantasy setting.",
+        hint: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.imageAdditionalQualitiesKey}.Hint`
       });
 
   }
@@ -93,6 +99,7 @@ export default class ActorAiOpenAiApi {
   static temperatureKey = 'temperature'
   static topPKey = 'topP'
   static maxTokensKey = 'maxTokens'
+  static imageAdditionalQualitiesKey = 'imageAdditionalQualities'
 
   messages = [];
   get initialMessage() { 
@@ -100,15 +107,11 @@ export default class ActorAiOpenAiApi {
   }
   
     prepareBasicPrompt() {
-      const SYSTEM_PROMPT = game.settings.get(Constants.ID, ActorAiOpenAiApi.systemPromptKey);
       const frequency_penalty = game.settings.get(Constants.ID, ActorAiOpenAiApi.frequencyPenaltyKey);
       const presence_penalty = game.settings.get(Constants.ID, ActorAiOpenAiApi.presencePenaltyKey);
       const temperature = game.settings.get(Constants.ID, ActorAiOpenAiApi.temperatureKey);
       const topP = game.settings.get(Constants.ID, ActorAiOpenAiApi.topPKey);
       const maxTokens = game.settings.get(Constants.ID, ActorAiOpenAiApi.maxTokensKey);
-      this.messages = [
-        { "role": "system", "content": SYSTEM_PROMPT },
-      ];
 
       let data = {
         model: "gpt-4o",
@@ -117,15 +120,15 @@ export default class ActorAiOpenAiApi {
         temperature: temperature,
         max_tokens: maxTokens,
         response_format: { type: "json_object" },
-        top_p: topP,
-        messages: this.messages
+        top_p: topP
       };
 
       return data;
     }
 
     async updateInputModelWithImagePrompt(inputModel) {
-      const dalleMessage =  game.i18n.localize("AActors.OpenAI.StageImagePrompt");
+      const additionalQualities = game.settings.get(Constants.ID, ActorAiOpenAiApi.imageAdditionalQualitiesKey);
+      const dalleMessage =  game.i18n.localize("AActors.OpenAI.StageImagePrompt").replaceAll('<<additionalImageQualities>>', additionalQualities);
       inputModel.TextPrompt += "\n" + dalleMessage;
     }
 
@@ -133,9 +136,8 @@ export default class ActorAiOpenAiApi {
       const url = 'https://api.openai.com/v1/chat/completions';
       const OPENAI_API_KEY = game.settings.get(Constants.ID, ActorAiOpenAiApi.apiKey); // Replace with your actual API key
   
-      let jsonInput = JSON.stringify(inputModel.JsonFormat);
-      let prompt = inputModel.TextPrompt + "\n" + jsonInput;
-      let inputMessage =  { "role": "user", "content": prompt };
+      let prompt = inputModel.TextPrompt;
+      let inputMessage =  { "role": "user", "content": 'NPC: ' + prompt };
       postData.messages.push(inputMessage);
 
       const response = await fetch(url, {

@@ -45,6 +45,23 @@
     height: 100%;
 }
 
+.actor-ai-inputs select {
+    padding: 5px;
+    margin: 3px;
+    height: auto;
+}
+
+.actor-ai-inputs input {
+    padding: 5px;
+    margin: 3px;
+    height: auto;
+}
+
+.actor-ai-inputs input::placeholder {
+    color: rgb(66, 66, 66);
+}
+
+
 .actor-ai-folders {
     padding: 5px;
     margin: 3px;

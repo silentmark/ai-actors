@@ -5,8 +5,15 @@ export default class InputModel {
 
     constructor(initialDescription) {
         this.TextPrompt = initialDescription;
-        this.JsonFormat = { description: "",
-                            imagePrompt: ""
-        };
+        this.JsonFormat = {
+                        description : { 
+                            appearance: "",
+                            personality: "",
+                            biography: "",
+                            motivations: "",
+                            specificTraits: ""
+                        },
+                        imagePrompt: ""
+                    };
     }
 }

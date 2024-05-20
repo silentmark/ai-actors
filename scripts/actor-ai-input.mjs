@@ -11,7 +11,7 @@ export default class ActorAiInput extends FormApplication {
         const overrides = {
             // height: 'auto',
             width: '500',
-            height: '200',
+            height: '350',
             template: Constants.TEMPLATES.INPUT,
             title: title,
             userId: game.userId,
@@ -40,7 +40,10 @@ export default class ActorAiInput extends FormApplication {
     }
 
     async _handleSendClick(event) {
-        this.object.input = this.form.description.value;
+        this.object.textInput = this.form.description.value;
+        this.object.complexity = this.form.complexity.value;
+        this.object.noOfTalents = new Number(this.form.noOfTalents.value);
+        this.object.noOfCareers = new Number(this.form.noOfCareers.value);
         let newObject = foundry.utils.deepClone(this.object);
         new ActorAi(newObject).render(true);
     }

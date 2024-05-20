@@ -1,7 +1,6 @@
 
 import ActorAiOpenAiApi from './api/actor-ai-open-ai-api.mjs';
 import WfrpOpenAiDetailsApi from './api/wfrp-open-ai-details.mjs';
-import GenericOpenAiDetailsApi from './api/generic-open-ai-details.mjs';
 import { Constants } from "./actor.mjs";
 import ImageMidJourneyApi from './api/image-mj-api.mjs';
 import ImageOpenAiApi from './api/image-open-ai-api.mjs';
@@ -75,11 +74,8 @@ export default class ActorAi extends FormApplication {
         this.actor = null;
         this.actorInput = args[0];
         this.api = new ActorAiOpenAiApi();
-        if (game.system.id == 'wfrp4e') {
-            this.apiDetails = new WfrpOpenAiDetailsApi();
-        } else {
-            this.apiDetails = new GenericOpenAiDetailsApi();
-        }
+        this.apiDetails = new WfrpOpenAiDetailsApi();
+    
         if (game.settings.get(Constants.ID, ImageMidJourneyApi.authorizationHeaderKey)) {
             this.apiImage = new ImageMidJourneyApi();
         } else {
@@ -104,7 +100,7 @@ export default class ActorAi extends FormApplication {
         data.folders = uniqueOptions;
         data.actorInput = this.actorInput;
         if (!this.apiInput) {
-            this.apiInput = new InputModel(this.object.input);
+            this.apiInput = new InputModel(this.object.textInput);
         }
 
         if (this.context.init) {
@@ -113,11 +109,32 @@ export default class ActorAi extends FormApplication {
                 let postData = this.api.prepareBasicPrompt();
                 let stages = this.apiDetails.stages;
                 for (let stage of stages) {
-                    await this.apiDetails.updateStageInputModel(stage, this.apiInput);
+                    await this.apiDetails.updateStageInputModel(stage, this.apiInput, this.actorInput);
                 }
-                await this.api.updateInputModelWithImagePrompt(this.apiInput);
+                await this.api.updateInputModelWithImagePrompt(this.apiInput, this.actorInput);
     
-                let actorInput = await this.api.generateDescription(postData, this.apiInput);                
+                const SYSTEM_PROMPT = game.settings.get(Constants.ID, ActorAiOpenAiApi.systemPromptKey); 
+                let noOfSentences = 10;
+                switch (this.actorInput.complexity) {
+                    case 'simple':
+                        noOfSentences = 5;
+                        break;
+                    case 'medium':
+                        noOfSentences = 10;
+                        break;
+                    case 'complex':
+                        noOfSentences = 20;
+                        break;
+                }
+
+                let technicalPrompt = game.i18n.localize("AActors.OpenAI.TechnicalSystemPrompt")
+                        .replaceAll('<<noOfSentences>>', noOfSentences.toString())
+                        .replaceAll('<<noOfSentencesHalved>>', (Math.ceil(noOfSentences / 2)).toString());
+                let jsonInput = JSON.stringify(this.apiInput.JsonFormat);
+                postData.messages = [
+                  { "role": "system", "content": SYSTEM_PROMPT + "\n" + technicalPrompt + "\n" + jsonInput}, 
+                ];
+                let actorInput = await this.api.generateDescription(postData, this.apiInput, this.actorInput);
                 await this.apiDetails.normalizeResponse(actorInput);
                 this.actorInput = foundry.utils.mergeObject(this.actorInput, actorInput);
                 this.actorInput.html = this.apiDetails.prettyPrintNpc(this.actorInput);
@@ -185,6 +202,7 @@ export default class ActorAi extends FormApplication {
 
         if (this.actorInput.imageBase64 != null) {
             let nameString = (actorData.name).replace(/\s+/g, '');
+            nameString += "-" + (Math.random() + 1).toString(36).substring(3);
             let newImg = await ActorAi.saveImageToFileSystem(this.actorInput.imageBase64, nameString);
             actorData.img = newImg.path;
         }

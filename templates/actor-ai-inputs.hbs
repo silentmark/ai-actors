@@ -1,6 +1,14 @@
 <form class="actor-ai">
     <div class="actor-ai-inputs">
         <textarea class="actor-ai-textarea" name="description" placeholder="{{localize "AActors.General.DescriptionPlaceholder" }}">{{description}}</textarea>
+        <select name="complexity" data-dtype="String" class="selector">
+            <option value="">{{localize "AActors.General.DetailsComplexity"}}</option>
+            <option value="simple">{{localize "AActors.General.DetailsSimple"}}</option>
+            <option value="medium">{{localize "AActors.General.DetailsMedium"}}</option>
+            <option value="complex">{{localize "AActors.General.DetailsComplex"}}</option>
+        </select>
+        <input name="noOfCareers" type="text" value="{{noOfCareers}}" placeholder="{{localize "AActors.General.NoOfCareersPlaceholder"}}" data-dtype="Number">
+        <input name="noOfTalents" type="text" value="{{noOfTalents}}" placeholder="{{localize "AActors.General.NoOfTalentsPlaceholder"}}" data-dtype="Number">
         <button type="button" title="{{localize "AActors.General.Send"}}" data-action="send"><i class="fa-solid fa-up-long"></i>{{localize "AActors.General.Send"}}</button>
     </div>
 </form>
