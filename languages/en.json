@@ -49,7 +49,11 @@
         },        
         "imageAdditionalQualities": {
           "Name": "Dodatkowe cechy portretu",
-          "Hint": "Podaj dodatkowe cechy portretu, które zostaną dodane do opisu portretu, np. 'realistic, fantasy, detailed'"
+          "Hint": "Provide additional properties that will be added into image prompt, np. 'realistic, fantasy, detailed'"
+        },
+        "modelVersion": {
+          "Name": "Open AI Chat GPT Model Version",
+          "Hint": "Provide a Model Version"
         }
       },
       "MJ": {

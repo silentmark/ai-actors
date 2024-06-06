@@ -21,8 +21,23 @@ export default class ActorAiOpenAiApi {
         config: true,
         restricted: true,
         hint: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.systemPromptKey}.Hint`,
-        default: `You are a helpful and creative assistant to the Game Master in 4th Edition Warhammer Fantasy RPG. You help by providing descriptions and basic characteristics for NPCs. Use the lore and history of Warhammer Fantasy World and be inspired by other fantasy literature or movies. Use an artistic style based on novels and stories. Do not use calculations and bullet points.`
+        default: `You are a helpful and creative assistant to the Game Master in 4th Edition Warhammer Fantasy RPG. You help by providing descriptions and basic characteristics for NPCs, places and stories. Use the lore and history of Warhammer Fantasy World and be inspired by other fantasy literature or movies. Use an artistic style based on novels and stories. Do not use calculations and bullet points.`
       });
+
+      game.settings.register(Constants.ID, 'modelVersion', {
+        name: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.modelVersion}.Name`,
+        default: 'gpt-4o',
+        type: String,
+        scope: 'world',
+        config: true,
+        restricted: true,
+        hint: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.modelVersion}.Hint`,
+        choices: {
+          'gpt-4o': 'GPT-4o',         // https://platform.openai.com/docs/models/gpt-4o
+          'gpt-4': 'GPT-4',           // https://platform.openai.com/docs/models/gpt-4
+          'gpt-3.5-turbo': 'GPT-3.5', // https://platform.openai.com/docs/models/gpt-3-5
+        },
+      });    
 
       game.settings.register(Constants.ID, ActorAiOpenAiApi.frequencyPenaltyKey, {
         name: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.frequencyPenaltyKey}.Name`,
@@ -100,8 +115,8 @@ export default class ActorAiOpenAiApi {
   static topPKey = 'topP'
   static maxTokensKey = 'maxTokens'
   static imageAdditionalQualitiesKey = 'imageAdditionalQualities'
+  static modelVersion = 'modelVersion'
 
-  messages = [];
   get initialMessage() { 
     game.i18n.localize("AActors.OpenAI.InitialMessage");
   }
@@ -114,7 +129,7 @@ export default class ActorAiOpenAiApi {
       const maxTokens = game.settings.get(Constants.ID, ActorAiOpenAiApi.maxTokensKey);
 
       let data = {
-        model: "gpt-4o",
+        model: game.settings.get(Constants.ID, ActorAiOpenAiApi.modelVersion),
         frequency_penalty: frequency_penalty,
         presence_penalty: presence_penalty,
         temperature: temperature,

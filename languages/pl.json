@@ -50,6 +50,10 @@
         "imageAdditionalQualities": {
           "Name": "Dodatkowe cechy portretu",
           "Hint": "Podaj dodatkowe cechy portretu, które zostaną dodane do opisu portretu, np. 'realistic, fantasy, detailed'"
+        },
+        "modelVersion": {
+          "Name": "Wersja modelu Open AI Chat-GPT",
+          "Hint": "Wybierz wersję modelu Open AI Chat-GPT"
         }
       },
       "MJ": {
