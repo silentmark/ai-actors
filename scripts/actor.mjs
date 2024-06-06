@@ -39,14 +39,15 @@ Hooks.on('chatMessage', (chatLog, message, chatData) => {
 	const reWhisper = new RegExp(/^(\/w(?:hisper)?\s)(\[(?:[^\]]+)\]|(?:[^\s]+))\s*([^]*)/, "i");
 	const match = message.match(reWhisper);
 	if (match) {
-		const gpt = 'gpt';
+		const gpt = 'ai';
 		const userAliases = match[2].replace(/[[\]]/g, "").split(",").map(n => n.trim());
 		const question = match[3].trim();
         const chatAi = new ChatAiOpenAiApi();
+        const users = userAliases
+        .filter(n => n.toLowerCase() !== gpt)
+        .reduce((arr, n) => arr.concat(ChatMessage.getWhisperRecipients(n)), [game.user]);
+
 		if (userAliases.some(u => u.toLowerCase() === gpt)) {
-			const users = userAliases
-				.filter(n => n.toLowerCase() !== gpt)
-				.reduce((arr, n) => arr.concat(ChatMessage.getWhisperRecipients(n)), [game.user]);
 
 			// same error logic as in Foundry
 			if (!users.length) throw new Error(game.i18n.localize("ERROR.NoTargetUsersForWhisper"));
@@ -73,6 +74,15 @@ Hooks.on('chatMessage', (chatLog, message, chatData) => {
             chatAi.resetChatMessagesHistory();
 			return false;
         }
+        if (userAliases.some(u => u.toLowerCase() === 'img')) {
+            ChatMessage.create({ content: ChatAiOpenAiApi.spinnerHtml, type: CONST.CHAT_MESSAGE_TYPES.WHISPER, whisper: users.map(u => u.id)})
+                .then(responseMessage => chatAi.generateChatImage(question, responseMessage));
+            return false;
+        }
 	}
 	return true;
 });
+
+Hooks.on('renderChatLog', (log, html, data) => {
+    ChatAiOpenAiApi.chatListeners(html)
+  });

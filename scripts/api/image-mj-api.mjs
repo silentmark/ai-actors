@@ -129,7 +129,12 @@ export default class ImageMidJourneyApi {
           "component_type":2,
           "custom_id":"{upscalerId}"
       }
-  }
+    }
+
+    
+     imageHtml = `<div contenteditable class='ai-image' style="text-align: center;"><img src=<<img>> style="border: none;"></div><div><button class='ai-image-upscale'>U1/button><button class='ai-image-upscale'>U2/button><button class='ai-image-upscale'>U3/button><button class='ai-image-upscale'>U4/button></div>`;
+
+     singleImageHtml = `<div contenteditable class='ai-image' style="text-align: center;"><img src=<<img>> style="border: none;"></div><div><button class='ai-image-copy'>Copy Image to Clipboard</button></div>`;
 
     async generateImage(prompt, actorInput) {
 
