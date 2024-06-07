@@ -50,6 +50,7 @@ There are two promts that can be used on chat: ```/whisper ai <<promt>>``` will 
 
 Second prompt is ```/whisper img <<prompt>>``` will generate an image based on provided description, there is no additional context included. It will allow you to either save the image or copy to clipboard (may not work if you don't have https) i.e. 
 
+![image](https://github.com/silentmark/ai-actors/assets/7930626/b0f1dd55-bd52-429f-a28e-475cca97019b)
 ![image](https://github.com/silentmark/ai-actors/assets/7930626/a50db9fb-9e8d-4b6b-83e1-b51f935c12d2)
 
 #### Final Remarks
