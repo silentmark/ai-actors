@@ -18,6 +18,10 @@
     },
 
     "Settings": {
+      "imageFolderLocation": {
+        "Name": "Lokalizacja Folderu z generowanymi obrazami",
+        "Hint": "Podaj lokalizację folderu, w którym będą zapisywane generowane obrazy, jeśli folder nie istnieje, zostanie utworzony"
+      },
       "OpenAI": {
         "openAiApiKey": {
           "Name": "OpenAI API Key",

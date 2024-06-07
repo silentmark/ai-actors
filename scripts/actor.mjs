@@ -3,6 +3,7 @@ import ChatAiOpenAiApi from './api/chat-ai-open-ai-api.mjs';
 
 export class Constants {
     static ID = 'aactors';
+    static imageFolderLocation = 'imageFolderLocation'
 
     static TEMPLATES = {
         INPUT: `modules/${this.ID}/templates/actor-ai-inputs.hbs`,
@@ -11,13 +12,24 @@ export class Constants {
 
     static initialize() {
         this.mainInput = new ActorAiInput();
+
+        game.settings.register(Constants.ID, Constants.imageFolderLocation, {
+            name: `AActors.Settings.${Constants.imageFolderLocation}.Name`,
+            default: "ai-images",
+            type: String,
+            scope: "world",
+            config: true,
+            restricted: true,
+            hint: `AActors.Settings.${Constants.imageFolderLocation}.Hint`
+          });
     }
 }
 
 // Initialize 
 Hooks.once('init', () => {
     Constants.initialize();
-});
+});  
+   
 
 // Create AI Actor Button in Actor directory
 Hooks.on('getActorDirectoryEntryContext', (html) => { 

@@ -3,7 +3,7 @@ import ActorAiOpenAiApi from "./actor-ai-open-ai-api.mjs";
 
 export default class ImageOpenAiApi {
 
-    imageHtml = `<div contenteditable class='ai-image' style="text-align: center;"><img src=<<img>> style="border: none;"></div><div><button class='ai-image-copy'>Copy Image to Clipboard</button></div>`;
+    imageHtml = `<div contenteditable class="ai-image" style="text-align: center;"><img src=<<img>> style="border: none;"></div><div><button class='ai-image-copy'>Copy Image to Clipboard</button></div><div><button class='ai-image-save'>Save Image</button></div>`;
     
     async generateImage(prompt, actorInput) {
       const OPENAI_API_KEY = game.settings.get(Constants.ID, ActorAiOpenAiApi.apiKey); // Replace with your actual API key

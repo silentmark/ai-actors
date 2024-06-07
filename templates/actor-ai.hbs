@@ -15,7 +15,7 @@
                     
                     {{#if (eq actorInput.upscale true)}}
                     <div class="actor-ai-img-buttons" data-message-id="{{actorInput.messageId}}" >
-                        {{#each actorInput.upsacelers as |upscale i|}}
+                        {{#each actorInput.upscalers as |upscale i|}}
                             <button type="button" data-custom-id="{{upscale}}" data-action="upscale">U{{i}}</button>
                         {{/each}}
                     </div>

@@ -132,9 +132,15 @@ export default class ImageMidJourneyApi {
     }
 
     
-     imageHtml = `<div contenteditable class='ai-image' style="text-align: center;"><img src=<<img>> style="border: none;"></div><div><button class='ai-image-upscale'>U1/button><button class='ai-image-upscale'>U2/button><button class='ai-image-upscale'>U3/button><button class='ai-image-upscale'>U4/button></div>`;
+     imageHtml = `<div contenteditable class="ai-image" style="text-align: center;"><img src="<<img>>" style="border: none;"></div>
+                  <div>
+                    <button class="ai-image-upscale" data-message-id="<<messageId>>" data-custom-id="<<customId1>>">U1</button>
+                    <button class="ai-image-upscale" data-message-id="<<messageId>>" data-custom-id="<<customId2>>">U2</button>
+                    <button class="ai-image-upscale" data-message-id="<<messageId>>" data-custom-id="<<customId3>>">U3</button>
+                    <button class="ai-image-upscale" data-message-id="<<messageId>>" data-custom-id="<<customId4>>">U4</button>
+                  </div>`;
 
-     singleImageHtml = `<div contenteditable class='ai-image' style="text-align: center;"><img src=<<img>> style="border: none;"></div><div><button class='ai-image-copy'>Copy Image to Clipboard</button></div>`;
+     singleImageHtml = `<div contenteditable class="ai-image" style="text-align: center;"><img src=<<img>> style="border: none;"></div><div><button class='ai-image-copy'>Copy Image to Clipboard</button></div><div><button class='ai-image-save'>Save Image</button></div>`;
 
     async generateImage(prompt, actorInput) {
 
@@ -211,12 +217,12 @@ export default class ImageMidJourneyApi {
               actorInput.upscale = true;
               actorInput.messageId = matchingMessage.id;
               actorInput.uniqueId = uniqueId;
-              actorInput.upsacelers = [];
+              actorInput.upscalers = [];
 
               for (let component of matchingMessage.components) {
                 for (let c of component.components) {
                   if (c.label && c.label[0] === "U") {
-                    actorInput.upsacelers.push(c.custom_id);
+                    actorInput.upscalers.push(c.custom_id);
                   }
                 }
               }

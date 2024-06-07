@@ -2,6 +2,7 @@ import { Constants } from "../actor.mjs";
 import ActorAiOpenAiApi from "./actor-ai-open-ai-api.mjs";
 import ImageMidJourneyApi from "./image-mj-api.mjs";
 import ImageOpenAiApi from "./image-open-ai-api.mjs";
+import ActorAi from "../actor-ai.mjs";
 
 export default class ChatAiOpenAiApi {
 
@@ -119,12 +120,18 @@ export default class ChatAiOpenAiApi {
     let dummyActorInput = {};
     await apiImage.generateImage(prompt, dummyActorInput);
     let imgHtml = apiImage.imageHtml.replace('<<img>>', dummyActorInput.imageSrc);
+    if (apiImage.imageHtml.includes('<<messageId>>')) {
+      imgHtml = imgHtml.replaceAll('<<messageId>>', dummyActorInput.messageId);
+      for (let i = 0; i < dummyActorInput.upscalers.length; i++) {
+        imgHtml = imgHtml.replace('<<customId' + (i+1) + '>>', dummyActorInput.upscalers[i]);
+      }
+    }
     await chatMessage.update({content: imgHtml});
   }
 
   static chatListeners (html) {
     html.on("click", ".ai-image-copy", async ev => {
-      const dataURL = html.find('.ai-image img').attr('src');
+      const dataURL = $(ev.currentTarget.parentElement.parentElement).find('img').attr('src');
       const input = await fetch(dataURL).then((response) => response.blob());
       await navigator.clipboard.write([
         new ClipboardItem({
@@ -133,8 +140,23 @@ export default class ChatAiOpenAiApi {
       ]);
     });
     html.on("click", ".ai-image-upscale", async ev => {
+      let messageId = ev.currentTarget.dataset['messageId']
+      let upscaleCustomId = ev.currentTarget.dataset['customId']
 
-
+      let apiImage = new ImageMidJourneyApi();
+      let response = await apiImage.upscale(messageId, upscaleCustomId);
+      let imgHtml = apiImage.singleImageHtml.replace('<<img>>', response.actorInput.imageSrc);
+      let msgId = ev.currentTarget.parentElement.parentElement.parentElement.dataset["messageId"]
+      let chatMessage = game.messages.get(msgId);
+      await chatMessage.update({content: imgHtml});
+    });
+    html.on("click", ".ai-image-save", async ev => {
+      const dataURL = $(ev.currentTarget.parentElement.parentElement).find('img').attr('src');
+      const input = await fetch(dataURL).then((response) => response.blob());
+      let nameString = "ai-image"
+      nameString += "-" + (Math.random() + 1).toString(36).substring(3);
+      nameString += ".png";
+      await ActorAi.saveImageToFileSystem(input, nameString);
     });
   }
 }

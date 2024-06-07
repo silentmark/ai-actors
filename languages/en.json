@@ -18,6 +18,10 @@
     },
 
     "Settings": {
+      "imageFolderLocation": {
+        "Name": "Image Folder Location",
+        "Hint": "Provide a location where the images will be saved, if folder doesn't exist it will be created"
+      },
       "OpenAI": {
         "openAiApiKey": {
           "Name": "OpenAI API Key",

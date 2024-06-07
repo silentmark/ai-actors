@@ -47,24 +47,32 @@ export default class ActorAi extends FormApplication {
         return options;
     }
 
-    static async saveImageToFileSystem(imageBase64, path) {
+    static async saveImageToFileSystem(input, path) {
 
         if (!path.includes('.png')) {
             path = path + '.png';
         }
-        // Convert to Blob
-        const byteCharacters = atob(imageBase64);
-        const byteArrays = [];
+        let myBlob = input;
+        if (input.constructor.name !== 'Blob') {
 
-        for (let i = 0; i < byteCharacters.length; i++) {
-            byteArrays.push(byteCharacters.charCodeAt(i));
+            // Convert to Blob
+            const byteCharacters = atob(imageBase64);
+            const byteArrays = [];
+
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteArrays.push(byteCharacters.charCodeAt(i));
+            }
+
+            const byteArray = new Uint8Array(byteArrays);
+            myBlob = new Blob([byteArray], { type: "image/png" });
         }
-
-        const byteArray = new Uint8Array(byteArrays);
-        const myBlob = new Blob([byteArray], { type: "image/png" });
-
         const imageFile = new File([myBlob], path, {type: myBlob.type});
-        const uploadResult = await FilePicker.upload("data", "", imageFile, {}, {notify: true});
+        const folder = game.settings.get(Constants.ID, Constants.imageFolderLocation);
+        try {
+            await FilePicker.createDirectory("data", folder);
+        }
+        catch {}
+        const uploadResult = await FilePicker.upload("data", folder, imageFile, {}, {notify: true});
         return uploadResult;
     }
 
@@ -187,7 +195,7 @@ export default class ActorAi extends FormApplication {
         let response = await this.apiImage.upscale(messageId, upscaleCustomId);
         delete this.actorInput.upscale;
         delete this.actorInput.messageId;
-        delete this.actorInput.upsacelers
+        delete this.actorInput.upscalers
         this.actorInput = foundry.utils.mergeObject(this.actorInput, response.actorInput);
 
         await this.refresh({stage: "final", message: ""});

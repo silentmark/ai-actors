@@ -104,7 +104,6 @@ export default class ActorAiOpenAiApi {
         default: "Photographic, realistic, subtle, fantasy setting.",
         hint: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.imageAdditionalQualitiesKey}.Hint`
       });
-
   }
 
   static apiKey = 'openAiApiKey';

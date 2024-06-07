@@ -109,6 +109,10 @@
     color: black;
 }
 
+.ai-image-upscale {
+    width: 20%;
+}
+
 /* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
