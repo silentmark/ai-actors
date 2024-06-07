@@ -43,6 +43,12 @@ export default class ChatAiOpenAiApi {
       { "role": "system", "content": SYSTEM_PROMPT }, 
     ];
 
+    const historyLength = game.settings.get(Constants.ID, ActorAiOpenAiApi.historyLength);
+    if (historyLength == 0) {
+      ChatAiOpenAiApi.chatMessagesHistory = [];
+    } else {
+      ChatAiOpenAiApi.chatMessagesHistory = ChatAiOpenAiApi.chatMessagesHistory.slice(-historyLength * 2);
+    }
     for (let m of ChatAiOpenAiApi.chatMessagesHistory) {
       postData.messages.push(m);
     }

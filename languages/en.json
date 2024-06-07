@@ -14,7 +14,9 @@
       "DetailsComplexity": "Details Complexity",
       "DetailsSimple": "Simple Description",
       "DetailsMedium": "Medium Description",
-      "DetailsComplex": "Complex Description"
+      "DetailsComplex": "Complex Description",
+      "CopyToClipboard": "Copy to Clipboard",
+      "SaveImage": "Save Image"
     },
 
     "Settings": {
@@ -23,6 +25,10 @@
         "Hint": "Provide a location where the images will be saved, if folder doesn't exist it will be created"
       },
       "OpenAI": {
+        "historyLength": {
+          "Name": "Length of Chat GPT Conversation",
+          "Hint": "Number of messages being send during conversation with /whisper ai <prompt> command, high value will preserve longer context but will also increase the cost significantly"
+        },
         "openAiApiKey": {
           "Name": "OpenAI API Key",
           "Hint": "Provide an API key to run OpenAI"
@@ -92,7 +98,7 @@
       }
     },
     "OpenAI": {
-      "DefaultSystemPrompt": "You are a helpful and creative assistant to the Game Master in 4th Edition Warhammer Fantasy RPG. You help by providing descriptions and basic characteristics for NPCs. Use the lore and history of Warhammer Fantasy World and be inspired by other fantasy literature or movies. Use an artistic style based on novels and stories. Do not use calculations and bullet points.",
+      "DefaultSystemPrompt": "You are a helpful and creative assistant to the Game Master in 4th Edition Warhammer Fantasy RPG. You help by providing descriptions and basic characteristics for NPCs, description of places, stories and adventures. Use the lore and history of Warhammer Fantasy World and be inspired by other fantasy literature or movies. Use an artistic style based on novels and stories. Do not use calculations and bullet points.",
       "TechnicalSystemPrompt": " Return the description in html format, without css. Return the response in json format given at the end of prompt. Don't skip any JSON field. In 'description' field put NPC's description\n 1. In apperance field: NPC's face description, body description, clothes. Write  <<noOfSentences>> sentences\n 2. In personality field: NPC's character, his attitude. Write <<noOfSentences>> sentences\n 3. In motivations field: NPc's motiviations, live goals, what drives him. Write <<noOfSentences>> sentences\n 4. In biography field: NPC's biography with events that shaped him. Write <<noOfSentences>> sentences\n 5. In specificTraits field: NPC's special or characteristics features or traits. Write <<noOfSentencesHalved>> sentences",
       "InitialMessage": "Generating NPC Description...",
 

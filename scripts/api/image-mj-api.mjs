@@ -132,15 +132,17 @@ export default class ImageMidJourneyApi {
     }
 
     
-     imageHtml = `<div contenteditable class="ai-image" style="text-align: center;"><img src="<<img>>" style="border: none;"></div>
+     get imageHtml() { return `<div contenteditable class="ai-image" style="text-align: center;"><img src="<<img>>" style="border: none;"></div>
                   <div>
                     <button class="ai-image-upscale" data-message-id="<<messageId>>" data-custom-id="<<customId1>>">U1</button>
                     <button class="ai-image-upscale" data-message-id="<<messageId>>" data-custom-id="<<customId2>>">U2</button>
                     <button class="ai-image-upscale" data-message-id="<<messageId>>" data-custom-id="<<customId3>>">U3</button>
                     <button class="ai-image-upscale" data-message-id="<<messageId>>" data-custom-id="<<customId4>>">U4</button>
                   </div>`;
+     }
 
-     singleImageHtml = `<div contenteditable class="ai-image" style="text-align: center;"><img src=<<img>> style="border: none;"></div><div><button class='ai-image-copy'>Copy Image to Clipboard</button></div><div><button class='ai-image-save'>Save Image</button></div>`;
+     get singleImageHtml() { return `<div contenteditable class="ai-image" style="text-align: center;"><img src=<<img>> style="border: none;"></div><div><button class='ai-image-copy'>${game.i18n.localize("AActors.General.CopyToClipboard")}</button></div><div><button class='ai-image-save'>${game.i18n.localize("AActors.General.SaveImage")}</button></div>`
+     }
 
     async generateImage(prompt, actorInput) {
 

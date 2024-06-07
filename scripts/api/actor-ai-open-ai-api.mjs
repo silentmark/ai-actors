@@ -104,6 +104,16 @@ export default class ActorAiOpenAiApi {
         default: "Photographic, realistic, subtle, fantasy setting.",
         hint: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.imageAdditionalQualitiesKey}.Hint`
       });
+
+      game.settings.register(Constants.ID, ActorAiOpenAiApi.historyLength, {
+        name: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.historyLength}.Name`,
+        default: 2,
+        type: Number,
+        scope: "world",
+        config: true,
+        restricted: true,
+        hint: `AActors.Settings.OpenAI.${ActorAiOpenAiApi.historyLength}.Hint`
+    });
   }
 
   static apiKey = 'openAiApiKey';
@@ -115,9 +125,10 @@ export default class ActorAiOpenAiApi {
   static maxTokensKey = 'maxTokens'
   static imageAdditionalQualitiesKey = 'imageAdditionalQualities'
   static modelVersion = 'modelVersion'
+  static historyLength = 'historyLength'
 
   get initialMessage() { 
-    game.i18n.localize("AActors.OpenAI.InitialMessage");
+    return game.i18n.localize("AActors.OpenAI.InitialMessage");
   }
   
     prepareBasicPrompt() {
