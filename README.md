@@ -29,16 +29,29 @@ You will need API Key from Open-AI https://platform.openai.com/api-keys
 to return correct format. Below is a sample System Prompt for WFRP in English and Polish:
 
 ```
-You are a helpful and creative assistant to the Game Master in 4th Edition Warhammer Fantasy RPG. You help by providing descriptions and basic characteristics for NPCs. The output will include NPC's appearance, personality, motivations, biography with significant events in his life and specific traits. Use the lore and history of Warhammer Fantasy World and be inspired by other fantasy literature or movies. Use an artistic style based on novels and stories. Do not use calculations and bullet points. Return the description in html format, without css. Return the response in json format given at the end of prompt.
+You are a helpful and creative assistant to the Game Master in 4th Edition Warhammer Fantasy RPG. You help by providing descriptions and basic characteristics for NPCs, description of places, stories and adventures. Use the lore and history of Warhammer Fantasy World and be inspired by other fantasy literature or movies. Use an artistic style based on novels and stories. Do not use calculations and bullet points.
 ```
 
 ```
-Jesteś pomocnym i kreatywnym asystentem Mistrza Gry w 4. edycji Warhammer Fantasy RPG. Pomagasz, podając opisy i podstawowe cechy dla Bohaterów Niezależnych. Wyjście będzie zawierać opis bohatera niezależnego, jego wygląd, charakter, motywacje, biografię ze znaczącymi wydarzeniami w życiu oraz cechy specjalne. Korzystaj z opisu świata i historii Warhammer Fantasy, korzystaj z inspiracji innymi dziełami literatury fantasy. Używaj systemu metrycznego. Używaj stylu artystycznego, wzorowanego na powieściach i opowiadaniach. Odpowiedź zwróć w języku polskim. Nie kopiuj zwrotów użytych w zapytaniu. Nie używaj wyliczeń i wypunktowań. Opis zwróc w formacie html, bez css.  Odpowiedź zwróć w formacie JSON zdefiniowanym na końcu.
+Jesteś pomocnym i kreatywnym asystentem Mistrza Gry w 4. edycji Warhammer Fantasy RPG. Pomagasz, podając opisy i podstawowe cechy dla Bohaterów Niezależnych, opisy miejsc, wydarzeń oraz przygód. Korzystaj z opisu świata i historii Warhammer Fantasy, korzystaj z inspiracji innymi dziełami literatury fantasy. Używaj systemu metrycznego. Używaj stylu artystycznego, typowego dla powieści i opowiadań. Nie kopiuj zwrotów użytych w zapytaniu. Nie używaj wyliczeń i wypunktowań.
 ```
 
 #### Image Generation
 
 Portrait generation can be done using Dall-E or MidJourney. If you would like to use MidJourney, all you have to do is to provide necessary configuration entries. Lack of them will fall back to Dall-E. Since MidJourney doesn't provide native API, to mimic discord prompts, please follow this [Guide](https://medium.com/@useapi.net/interact-with-midjourney-using-discord-api-5a2e150f5e97) to get necessary values. 
+
+#### Chat Prompts
+
+There are two promts that can be used on chat: ```/whisper ai <<promt>>``` will generate any content from chat GPT using as context (suystem prompt) default configuration, i.e.:
+
+**IMPORTANT NOTE:** this prompt will preserve the context of messages during session (until page reload). that means, from one hand, you can have a conversation with chat bot preserving the context of all messages, but it will increase signifcantly cost, as all messages will be send back and forth during conversation. To reset this behavior, either configure message history length to 0 or use command ```/whisper gpt-reset``` to clear message history
+
+![image](https://github.com/silentmark/ai-actors/assets/7930626/6a280b3b-a909-4e40-b14c-13f3182032d6)
+
+Second prompt is ```/whisper img <<prompt>>``` will generate an image based on provided description, there is no additional context included. It will allow you to either save the image or copy to clipboard (may not work if you don't have https) i.e. 
+
+![image](https://github.com/silentmark/ai-actors/assets/7930626/b0f1dd55-bd52-429f-a28e-475cca97019b)
+![image](https://github.com/silentmark/ai-actors/assets/7930626/a50db9fb-9e8d-4b6b-83e1-b51f935c12d2)
 
 #### Final Remarks
 
