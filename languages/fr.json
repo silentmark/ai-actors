@@ -1,0 +1,136 @@
+{
+  "AActors": {
+    "General": {
+      "Create": "Créer un PNJ via IA",
+      "Send": "Envoyer à l'IA",
+      "DescriptionPlaceholder": "Saisir la description du PNJ",
+      "GenerateImage": "Créer l'image",
+      "SelectFolder": "Sélectionnez un répertoire",
+      "Save": "Sauvegarder l'Acteur",
+      "PrepareInputForm": "Prépare la saisie pour l'IA",
+      "SaveActorForm": "Sauvegarder l'Acteur",
+      "NoOfTalentsPlaceholder": "Nombre Talents",
+      "NoOfCareersPlaceholder": "Nombre de Carrières",
+      "DetailsComplexity": "Complexité des détails",
+      "DetailsSimple": "Description simple",
+      "DetailsMedium": "Description moyenne",
+      "DetailsComplex": "Description complexe",
+      "CopyToClipboard": "Copier dans le Presse-papiers",
+      "SaveImage": "Sauvegarder l'image"
+    },
+
+    "Settings": {
+      "imageFolderLocation": {
+        "Name": "Dossier des images",
+        "Hint": "Indique le dossier dans lequel les images seront sauvegardées. Si le dossier n'existe pas, il sera créé."
+      },
+      "OpenAI": {
+        "historyLength": {
+          "Name": "Longueur de la conversation avec ChatGPT",
+          "Hint": "Nombre de messages envoyés pendant une conversation avec la commande <strong>/whisper ai</strong>. Les valeurs élevées préserveront le contexte plus longtemps, à un cout plus élevé."
+        },
+        "openAiApiKey": {
+          "Name": "Clé d'API OpenAI",
+          "Hint": "Indiquez la clé d'API d'OpenAI"
+        },
+        "systemPrompt": {
+          "Name": "Prompt système",
+          "Hint": "Indiquez le contexte Provide (Prompt système) pour la génération du PNJ"
+        },
+        "frequencyPenalty": {
+          "Name": "Pénalité de fréquence",
+          "Hint": "Indiquez une valeur de 'frequency_penalty' pour générer le PNJ, cf. https://platform.openai.com/docs/api-reference/chat/create#chat-create-frequency_penalty"
+        },
+        "presencePenalty": {
+          "Name": "Pénalite de présence",
+          "Hint": "Indiquez une valeur de 'presence_penalty' pour générer le PNJ, cf. https://platform.openai.com/docs/api-reference/chat/create#chat-create-presence_penalty"
+        },
+        "maxTokens": {
+          "Name": "Nombre max de tokens",
+          "Hint": "Indiquez le nombre de 'max_tokens' pour générer le PNJ, cf. https://platform.openai.com/docs/api-reference/chat/create#chat-create-max_tokens"
+        },
+        "temperature": {
+          "Name": "Température",
+          "Hint": "Indiquez une valeur de 'temperature' pour générer le PNJ, cf. https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature"
+        },
+        "topP": {
+          "Name": "Top P",
+          "Hint": "Indiquez une valeur 'top_p' pour générer le PNJ, cf. https://platform.openai.com/docs/api-reference/chat/create#chat-create-top_p"
+        },        
+        "imageAdditionalQualities": {
+          "Name": "Propriété additionnelles",
+          "Hint": "Indiquez des propriétés additionnelles qui seront ajoutées au prompt image, ie 'réaliste, fantasy, détaillée'"
+        },
+        "modelVersion": {
+          "Name": "Version de ChatGTP à utliser",
+          "Hint": "Indiquez une version de modèle ChatGPT"
+        }
+      },
+      "MJ": {
+        "authorizationHeader": {
+          "Name": "Entête d'autorisation Discord",
+          "Hint": "Indiquez un 'Authorization Header' pour accéder à l'API, pour plus de détails consultez : https://medium.com/@useapi.net/interact-with-midjourney-using-discord-api-5a2e150f5e97"
+        },
+        "channelId": {
+          "Name": "Id de canal Discord ",
+          "Hint": "Indiquez l'ID du canal Discord"
+        },
+        "appId": {
+          "Name": "App Id de Midjourney",
+          "Hint": "Indiquez l'App Id de Midjourney"
+        },
+        "guildId": {
+          "Name": "Id de Guilde Discord",
+          "Hint": "Indiquez l'Id de Guilde Discord"
+        },
+        "sessionId": {
+          "Name": "Id de session Discord",
+          "Hint": "Indiquez l'Id de session Discord"
+        },
+        "imagineCommandVersionId": {
+          "Name": "Id de version de la commande Imagine de MidJourney",
+          "Hint": "Indiquez l'Id de version de la commande Imagine de MidJourney"
+        },
+        "imagineCommandId": {
+          "Name": "Id de la commande Imagine de MidJourney",
+          "Hint": "Indiquez l'Id de la commande Imagine de MidJourney"
+        }
+      }
+    },
+    "OpenAI": {
+      "DefaultSystemPrompt": "Vous êtes un assistant utile et créatif du Maitre de Jeu dans la 4e édition de Warhammer Fantasy RPG. Vous aidez en fournissant des descriptions et des caractéristiques de base pour les PNJ, des descriptions de lieux, des histoires et des aventures. Utilisez les traditions et l'histoire de Warhammer Fantasy World et laissez-vous inspirer par d'autres littératures ou films fantastiques. Utilisez un style artistique basé sur des romans et des histoires. N'utilisez pas de calculs ni de puces.",
+      "TechnicalSystemPrompt": " Renvoyez la description au format html, sans css. Renvoyez la réponse au format json donné à la fin de l'invite. Ne sautez aucun champ JSON. Dans le champ 'description', mettez la description du PNJ\n 1. Dans le champ d'apparence : description du visage, description du corps, vêtements du PNJ. Écrivez des phrases <<noOfSentences>>\n 2. Dans le champ personnalité : le caractère du PNJ, son attitude. Écrivez des phrases <<noOfSentences>>\n 3. Dans le champ des motivations : les motivations du NPc, ses objectifs en direct, ce qui le motive. Écrivez des phrases <<noOfSentences>>\n 4. Dans le champ biographie : la biographie du PNJ avec les événements qui l'ont façonné. Écrivez des phrases <<noOfSentences>>\n 5. Dans le champ SpecificTraits : les caractéristiques ou caractéristiques spéciales du PNJ. Écrivez des phrases <<noOfSentencesHalved>>",
+      "InitialMessage": "Génération de la description du PNJ...",
+
+      "ImageMessage": "Génération du portrait du PNJ...",
+      "StageImagePrompt": "- Enfin, sur la base de tout le contenu préparé, préparer une description en anglais dans le but de générer une image à l'aide de Dall-E. La description doit commencer par « <<additionalImageQualities>>. Un portrait de'. Renvoie la description générée au format JSON."
+    },
+    "WFRP": {
+      "StageCharacteristicsPrompt": "1. Sur la base des étapes précédentes, renvoyez les caractéristiques du PNJ au format JSON. Remplissez les champs de caractéristiques avec des valeurs numériques sur une échelle de 1 à 100, où 0 signifie aucun, 100 est légendaire. dans le champ 'nom', écrivez le nom du PNJ, si aucun ne le propose, proposez-en un.\n 2. Sur la base des étapes précédentes, renvoyez les détails du PNJ dans les champs : espèce, sexe, âge, taille, poids, cheveux, yeux.",
+      "StageCareersPrompt": "3. Sur la base des étapes précédentes, sélectionnez un numéro de carrière « noOFCareers » parmi ceux disponibles dans la version anglaise du manuel WFRP 4ed. Renvoie les noms sélectionnés dans un format de tableau JSON plat. Ne changez pas le cas.",
+       "StageTalentsPrompt": "4. En vous basant sur les étapes précédentes, sélectionnez « noOfTalents » nombre de talents parmi ceux disponibles dans la version anglaise du manuel WFRP 4ed. Renvoie les noms sélectionnés dans un format de tableau JSON plat sans aucune structure. Ne changez pas le cas. Ne modifiez pas les valeurs. Ne changez pas les noms des talents.",
+
+      "WS": "CC",
+      "BS": "CT",
+      "S": "F",
+      "T": "E",
+      "I": "I",
+      "Ag": "Ag",
+      "Dex": "Dex",
+      "Int": "Int",
+      "WP": "FM",
+      "Fel": "Soc",
+
+      "Hair": "Cheveux",
+      "Eyes": "Yeux",
+      "Height": "Taille",
+      "Weight": "Poids",
+      "Age": "Age",
+      "Gender": "Genre",
+      "Species": "Espèces",
+      "Description": "Description",
+      "Careers": "Carrières",
+      "Talents": "Talents"
+    }
+  }
+}
