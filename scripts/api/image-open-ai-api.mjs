@@ -3,7 +3,7 @@ import ActorAiOpenAiApi from "./actor-ai-open-ai-api.mjs";
 
 export default class ImageOpenAiApi {
 
-    get imageHtml() { return `<div contenteditable class="ai-image" style="text-align: center;"><img src=<<img>> style="border: none;"></div><div><button class='ai-image-copy'>${game.i18n.localize("AActors.General.CopyToClipboard")}</button></div><div><button class='ai-image-save'>${game.i18n.localize("AActors.General.SaveImage")}</button></div>`;
+    get imageHtml() { return `<div contenteditable class="ai-image" style="text-align: center;"><img class="actor-ai-img-gen" src=<<img>> style="border: none;"></div><div><button class='ai-image-copy'>${game.i18n.localize("AActors.General.CopyToClipboard")}</button></div><div><button class='ai-image-save'>${game.i18n.localize("AActors.General.SaveImage")}</button></div>`;
     }
     
     async generateImage(prompt, actorInput) {

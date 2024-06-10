@@ -3,6 +3,7 @@ import ActorAiOpenAiApi from "./actor-ai-open-ai-api.mjs";
 import ImageMidJourneyApi from "./image-mj-api.mjs";
 import ImageOpenAiApi from "./image-open-ai-api.mjs";
 import ActorAi from "../actor-ai.mjs";
+import ActorAiImagePopup from "../actor-ai-image-popup.mjs";
 
 export default class ChatAiOpenAiApi {
 
@@ -136,6 +137,10 @@ export default class ChatAiOpenAiApi {
   }
 
   static chatListeners (html) {
+    html.on("click", ".actor-ai-img-gen", ev => {
+        let src = $(ev.currentTarget).attr('src');
+        new ActorAiImagePopup({ image: src}).render(true);
+    });
     html.on("click", ".ai-image-copy", async ev => {
       const dataURL = $(ev.currentTarget.parentElement.parentElement).find('img').attr('src');
       const input = await fetch(dataURL).then((response) => response.blob());

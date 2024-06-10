@@ -7,7 +7,8 @@ export class Constants {
 
     static TEMPLATES = {
         INPUT: `modules/${this.ID}/templates/actor-ai-inputs.hbs`,
-        ACTOR: `modules/${this.ID}/templates/actor-ai.hbs`
+        ACTOR: `modules/${this.ID}/templates/actor-ai.hbs`,
+        IMAGEPOPUP: `modules/${this.ID}/templates/actor-ai-image-popup.hbs`
     }
 
     static initialize() {

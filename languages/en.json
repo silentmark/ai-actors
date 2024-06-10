@@ -16,7 +16,8 @@
       "DetailsMedium": "Medium Description",
       "DetailsComplex": "Complex Description",
       "CopyToClipboard": "Copy to Clipboard",
-      "SaveImage": "Save Image"
+      "SaveImage": "Save Image",
+      "ImagePopup": "Image"
     },
 
     "Settings": {

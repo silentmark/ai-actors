@@ -16,7 +16,8 @@
       "DetailsMedium": "Umiarkowany Opis",
       "DetailsComplex": "Bogaty Opis",
       "CopyToClipboard": "Skopiuj do schowka",
-      "SaveImage": "Zapisz Obraz"
+      "SaveImage": "Zapisz Obraz",
+      "ImagePopup": "Obraz"
     },
 
     "Settings": {

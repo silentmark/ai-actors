@@ -1,5 +1,6 @@
 
 import ActorAiOpenAiApi from './api/actor-ai-open-ai-api.mjs';
+import ActorAiImagePopup from './actor-ai-image-popup.mjs';
 import WfrpOpenAiDetailsApi from './api/wfrp-open-ai-details.mjs';
 import { Constants } from "./actor.mjs";
 import ImageMidJourneyApi from './api/image-mj-api.mjs';
@@ -30,18 +31,16 @@ export default class ActorAi extends FormApplication {
         let options = [];
         folders.forEach(folder => {
             let depthString = "";
-            if (folder.type == 'Actor') {
-                for(let i = 1; i < folder.depth; i++) {
-                    depthString += "-- ";
-                }
-                if(folder.children.length > 0 && parentId == null) {
-                    options.push( {name: depthString + folder.name, value: folder.id });
-                    let childrenArray = folder.children.map(child => child.folder);
-                    options.push(this.getFolderOptions(childrenArray, folder.id));
-                }
-                else if(parentId != null) {
-                    options.push({ name: depthString + folder.name, value: folder.id });
-                }
+            for(let i = 1; i < folder.depth; i++) {
+                depthString += "-- ";
+            }
+            if (folder.children.length > 0 && parentId == null) {
+                options.push( {name: depthString + folder.name, value: folder.id });
+                let childrenArray = folder.children.map(child => child.folder);
+                options.push(this.getFolderOptions(childrenArray, folder.id));
+            }
+            else if (parentId != null) {
+                options.push({ name: depthString + folder.name, value: folder.id });
             }
         })
         return options;
@@ -56,7 +55,7 @@ export default class ActorAi extends FormApplication {
         if (input.constructor.name !== 'Blob') {
 
             // Convert to Blob
-            const byteCharacters = atob(imageBase64);
+            const byteCharacters = atob(input);
             const byteArrays = [];
 
             for (let i = 0; i < byteCharacters.length; i++) {
@@ -100,7 +99,7 @@ export default class ActorAi extends FormApplication {
     async getData() { 
         const data = await super.getData();
 
-        let foldersArray = ActorAi.getFolderOptions(game.folders);
+        let foldersArray = ActorAi.getFolderOptions(game.folders.filter(x=>x.type == 'Actor').sort((x,y) => x.depth > y.depth ? 1 : -1));
         let foldersFlat = foldersArray.flat(Infinity);
         let uniqueOptions = Array.from(new Map(foldersFlat.map(option => [option.value, option])).values());
         
@@ -167,6 +166,7 @@ export default class ActorAi extends FormApplication {
         html.on('click', "[data-action='save']", this._handleSaveButtonClick.bind(this));
         html.on('click', "[data-action='generate']", this._handleGenerateImageButtonClick.bind(this));
         html.on('click', "[data-action='upscale']", this._handleUpscaleButtonClick.bind(this));
+        html.on('click', ".actor-ai-img-gen", this._handleImagePopup.bind(this));
     }
 
     async refresh(stage) {
@@ -175,11 +175,13 @@ export default class ActorAi extends FormApplication {
         this.render(true);
     }
 
+    async _handleImagePopup(event, data) {
+        new ActorAiImagePopup({ image: this.actorInput.imageSrc}).render(true);
+    }
+
     async _handleGenerateImageButtonClick(event, data) {
-        let prompt = this.form['actorInput.imagePrompt'].value;
-        
-        let actorInput = foundry.utils.deepClone(this.actorInput);
-        actorInput.imagePrompt = prompt;
+        let prompt = this.form['actorInput.imagePrompt'].value;        
+        this.actorInput.imagePrompt = prompt;
 
         await this.refresh({stage: "image", message: game.i18n.localize("AActors.OpenAI.StageImage")});
         await this.apiImage.generateImage(prompt, this.actorInput);
