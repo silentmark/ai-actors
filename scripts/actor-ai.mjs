@@ -27,25 +27,6 @@ export default class ActorAi extends FormApplication {
         return mergedOptions;
     }
 
-    static getFolderOptions(folders, parentId = null) {
-        let options = [];
-        folders.forEach(folder => {
-            let depthString = "";
-            for(let i = 1; i < folder.depth; i++) {
-                depthString += "-- ";
-            }
-            if (folder.children.length > 0 && parentId == null) {
-                options.push( {name: depthString + folder.name, value: folder.id });
-                let childrenArray = folder.children.map(child => child.folder);
-                options.push(this.getFolderOptions(childrenArray, folder.id));
-            }
-            else if (parentId != null) {
-                options.push({ name: depthString + folder.name, value: folder.id });
-            }
-        })
-        return options;
-    }
-
     static async saveImageToFileSystem(input, path) {
 
         if (!path.includes('.png')) {
@@ -99,7 +80,19 @@ export default class ActorAi extends FormApplication {
     async getData() { 
         const data = await super.getData();
 
-        let foldersArray = ActorAi.getFolderOptions(game.folders.filter(x=>x.type == 'Actor').sort((x,y) => x.depth > y.depth ? 1 : -1));
+        let foldersArray = [];
+        const stack = [...game.folders.filter(x=>x.type == 'Actor' && x.depth == 1)];
+        
+        while (stack.length > 0) {
+            const folder = stack.pop();
+            const depthString = "-- ".repeat(folder.depth - 1);
+            foldersArray.push({ name: depthString + folder.name, value: folder.id });
+            
+            if (folder.children.length > 0) {
+                stack.push(...folder.children.map(x => x.folder));
+            }
+        }
+        
         let foldersFlat = foldersArray.flat(Infinity);
         let uniqueOptions = Array.from(new Map(foldersFlat.map(option => [option.value, option])).values());
         

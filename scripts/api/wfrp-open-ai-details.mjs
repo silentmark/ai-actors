@@ -225,8 +225,8 @@ export default class WfrpOpenAiDetailsApi {
     data.system.details = {};
     data.system.details.species = { value: npc.details.species };
     data.system.details.gender = { value: npc.details.gender };
-    data.system.details.hair = { value: npc.details.hair };
-    data.system.details.eyes = { value: npc.details.eyes };
+    data.system.details.haircolour = { value: npc.details.hair };
+    data.system.details.eyecolour = { value: npc.details.eyes };
     data.system.details.age = { value: npc.details.age };
     data.system.details.height = { value: npc.details.height };
     data.system.details.weight = { value: npc.details.weight };
