@@ -108,7 +108,7 @@
     },
     "WFRP": {      
       "StageCharacteristicsPrompt": "1. Na podstawie przygotowanego opisu, zwróć w formacie JSON statystyki bohatera niezależnego. Pola characteristics wypełnij wartościami liczbowymi w skali od 1 do 100 - W polu name wpisz imię postaci, jeśli nie podano, zaproponuj jakieś\n 2. Na podstawie poprzednich kroków podaj szczegóły postaci w polach species, gender, age, height, weight, hair, eyes. Wartości powinny być w języku polskim",
-      "StageCareersPrompt": "3. Na podstawie poprzednich kroków wybierz liczbę profesji (Career) <<noOFCareers>> spośród dostępnych w podręczniku do angielskiej wersji systemu WFRP 4ed.",
+      "StageCareersPrompt": "3. Na podstawie poprzednich kroków wybierz liczbę profesji (Career) <<noOfCareers>> spośród dostępnych w podręczniku do angielskiej wersji systemu WFRP 4ed.",
       "StageTalentsPrompt": "4. Na podstawie poprzednich kroków wybierz liczbę Talentów (Talent): <<noOfTalents>> spośród dostępnych w podręczniku do angielskiej wersji systemu WFRP 4ed. Wybrane nazwy zwróć w formacie płaskiej tabeli JSON bez żadnych struktur. Nie zmieniaj wielkości liter. Nie zmieniaj wartości ani nazw. Nie odmieniaj nazw talentów.",
 
       "WS": "WW",

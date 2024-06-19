@@ -108,7 +108,7 @@
     },
     "WFRP": {
       "StageCharacteristicsPrompt": "1. Based on previous steps, return the NPC's characteristics in JSON format. Fill in the characteristics fields with numerical values on a scale from 1 to 100, where 0 is none, 100 is legendary. in 'name' field write NPC's name, if none provide, propose one.\n 2. Based on previous steps, return the NPC's details in fields: species, gender, age, height, weight, hair, eyes.",
-      "StageCareersPrompt": "3. Based on the previous steps, select a <<noOFCareers>> number of career from those available in the English version of WFRP 4ed handbook. Return the selected names in a flat JSON table format. Do not change the case.",
+      "StageCareersPrompt": "3. Based on the previous steps, select a <<noOfCareers>> number of career from those available in the English version of WFRP 4ed handbook. Return the selected names in a flat JSON table format. Do not change the case.",
        "StageTalentsPrompt": "4. Based on previous steps, select <<noOfTalents>> number of Talents from those available in the English version of WFRP 4ed handbook. Return the selected names in a flat JSON table format without any structures. Do not change the case. Do not change values. Don't change the names of talents.",
 
       "WS": "WS",

@@ -104,12 +104,12 @@
       "InitialMessage": "Génération de la description du PNJ...",
 
       "ImageMessage": "Génération du portrait du PNJ...",
-      "StageImagePrompt": "- Enfin, sur la base de tout le contenu préparé, préparer une description en anglais dans le but de générer une image à l'aide de Dall-E. La description doit commencer par « <<additionalImageQualities>>. Un portrait de'. Renvoie la description générée au format JSON."
+      "StageImagePrompt": "- Enfin, sur la base de tout le contenu préparé, préparer une description en anglais dans le but de générer une image à l'aide de Dall-E. La description doit commencer par <<additionalImageQualities>>. Un portrait de'. Renvoie la description générée au format JSON."
     },
     "WFRP": {
       "StageCharacteristicsPrompt": "1. Sur la base des étapes précédentes, renvoyez les caractéristiques du PNJ au format JSON. Remplissez les champs de caractéristiques avec des valeurs numériques sur une échelle de 1 à 100, où 0 signifie aucun, 100 est légendaire. dans le champ 'nom', écrivez le nom du PNJ, si aucun ne le propose, proposez-en un.\n 2. Sur la base des étapes précédentes, renvoyez les détails du PNJ dans les champs : espèce, sexe, âge, taille, poids, cheveux, yeux.",
-      "StageCareersPrompt": "3. Sur la base des étapes précédentes, sélectionnez un numéro de carrière « noOFCareers » parmi ceux disponibles dans la version anglaise du manuel WFRP 4ed. Renvoie les noms sélectionnés dans un format de tableau JSON plat. Ne changez pas le cas.",
-       "StageTalentsPrompt": "4. En vous basant sur les étapes précédentes, sélectionnez « noOfTalents » nombre de talents parmi ceux disponibles dans la version anglaise du manuel WFRP 4ed. Renvoie les noms sélectionnés dans un format de tableau JSON plat sans aucune structure. Ne changez pas le cas. Ne modifiez pas les valeurs. Ne changez pas les noms des talents.",
+      "StageCareersPrompt": "3. Sur la base des étapes précédentes, sélectionnez un numéro de carrière <<noOfCareers>> parmi ceux disponibles dans la version anglaise du manuel WFRP 4ed. Renvoie les noms sélectionnés dans un format de tableau JSON plat. Ne changez pas le cas.",
+       "StageTalentsPrompt": "4. En vous basant sur les étapes précédentes, sélectionnez <<noOfTalents>> nombre de talents parmi ceux disponibles dans la version anglaise du manuel WFRP 4ed. Renvoie les noms sélectionnés dans un format de tableau JSON plat sans aucune structure. Ne changez pas le cas. Ne modifiez pas les valeurs. Ne changez pas les noms des talents.",
 
       "WS": "CC",
       "BS": "CT",
