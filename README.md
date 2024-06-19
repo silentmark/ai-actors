@@ -2,7 +2,7 @@
 
 AI Generated NPCs is a Foundry VTT Module that creates detailed NPCs using ChatGPT and Dall-E / MidJourney for their portraits. 
 
-![image](https://github.com/silentmark/ai-actors/assets/7930626/1bba5aff-4ffc-41e6-b00a-24a714d7d46d)
+![image](https://raw.githubusercontent.com/silentmark/ai-actors/main/other/img1.png)
 
 
 Currently suppoerted system:
@@ -18,11 +18,11 @@ In the Actor tab, there is new button: Generate NPC
 
 Generate NPC will open a new window where you can provide simple description about desired NPC. Type a description of your character and click on the Generate button. This takes a minute for ChatGPT to create, so please be patient. Once the character and an image have been generated, they will show in the window. From here you can save it as an actory or just use it ad-hoc. If the image generated does not fit your vision of this character, you can edit its description and regenerate the image using the button under the image. If you have a folder you would like this character to be placed in, you can choose from the drop down list of folders. Not selecting a specific folder will place the actor in the top-level folder. Clicking the "Save NPC" button will create an Actor based on ChatGPT's generation. 
 
-![image](https://github.com/silentmark/ai-actors/assets/7930626/85d03554-645a-4512-9980-9a7fa8f021eb)
+![image](https://raw.githubusercontent.com/silentmark/ai-actors/main/other/img2.png)
 
 ### Settings
 
-![image](https://github.com/silentmark/ai-actors/assets/7930626/c1112fa6-d2b6-4dc7-9c6d-355eb3b6f930)
+![image](https://raw.githubusercontent.com/silentmark/ai-actors/main/other/img3.png)
 
 You will need API Key from Open-AI https://platform.openai.com/api-keys
 
@@ -46,12 +46,12 @@ There are two promts that can be used on chat: ```/whisper ai <<promt>>``` will 
 
 **IMPORTANT NOTE:** this prompt will preserve the context of messages during session (until page reload). that means, from one hand, you can have a conversation with chat bot preserving the context of all messages, but it will increase signifcantly cost, as all messages will be send back and forth during conversation. To reset this behavior, either configure message history length to 0 or use command ```/whisper gpt-reset``` to clear message history
 
-![image](https://github.com/silentmark/ai-actors/assets/7930626/6a280b3b-a909-4e40-b14c-13f3182032d6)
+![image](https://raw.githubusercontent.com/silentmark/ai-actors/main/other/img4.png)
 
 Second prompt is ```/whisper img <<prompt>>``` will generate an image based on provided description, there is no additional context included. It will allow you to either save the image or copy to clipboard (may not work if you don't have https) i.e. 
 
-![image](https://github.com/silentmark/ai-actors/assets/7930626/b0f1dd55-bd52-429f-a28e-475cca97019b)
-![image](https://github.com/silentmark/ai-actors/assets/7930626/a50db9fb-9e8d-4b6b-83e1-b51f935c12d2)
+![image](https://raw.githubusercontent.com/silentmark/ai-actors/main/other/img5.png)
+![image](https://raw.githubusercontent.com/silentmark/ai-actors/main/other/img6.png)
 
 #### Final Remarks
 
