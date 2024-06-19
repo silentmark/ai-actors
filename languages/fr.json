@@ -16,7 +16,8 @@
       "DetailsMedium": "Description moyenne",
       "DetailsComplex": "Description complexe",
       "CopyToClipboard": "Copier dans le Presse-papiers",
-      "SaveImage": "Sauvegarder l'image"
+      "SaveImage": "Sauvegarder l'image",
+      "ImagePopup": "Image"
     },
 
     "Settings": {
